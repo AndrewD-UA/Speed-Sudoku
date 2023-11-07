@@ -1,3 +1,3 @@
-/*
- * Server-side code for Speed Sudoku
-*/
+/**
+ * Server for Speed Sudoku
+ */
