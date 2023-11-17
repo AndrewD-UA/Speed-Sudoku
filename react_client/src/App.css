@@ -1,0 +1,113 @@
+/* By: Andrew Dennison and [ADD NAME IF MODIFIED]
+ * Last modified: 17 NOV 23
+*/
+
+/* This is the default CSS generated when you make a new React app.
+ * height and width being 100vh and 100vw are unnecessary except to 
+ * allow percentage-based heights and widths to sub-children.
+*/
+.App {
+  text-align: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* This is the default CSS generated when you make a new React app.
+ * This class contains the entire Sudoku gameplay webpage.  
+ * This class being a flexbox allows for the vertical alignment of the entire page.
+*/
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+/* the gameButton class is used to style each individual button throughout the Sudoku board.
+ * These buttons are separate from inputButtons, or any other buttons laid out throughout the 
+ * primary gameplay window.
+ * Each gameButton will store one value and nothing else.
+ */
+.gameButton{
+  height: 100%;
+  font-size: 2em;
+}
+
+/* The Board ID represents the div containing the entire Sudoku board, and nothing else.
+ * The grid alignment allows for auto-resizing and alignment that is viewpoint-independent.
+ */
+#Board{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  flex-grow: 2;
+  
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+/* The gridSquare class represents each sub-grid on the sudoku board.  Each
+ * element with a gridSquare class has 9 subchildren (1 for each possible input)
+ * Alternatively, a gridSquare represents the first dimension of the 2D array gridSquare
+ * in board.js.
+ * Each gridSquare, or sub-grid, is a grid parent element to 9 gameButtons.
+ */
+.gridSquare{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  border: 5px solid black;
+  width: auto;
+}
+
+/* The ID InputButtons represents the div containing all nine input buttons below
+ * the primary sudoku board.
+ * This is the parent element to 9 inputButton elements, which are aligned horizonatlly as a flexbox.
+*/
+#Inputs{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+
+  flex-grow: 1;
+}
+
+/* An inputButton is the buttons labelled 1-9 below the board.  This CSS
+ * styling applies to each individual button.
+ */
+.inputButton{
+  height: 8vh;
+  width: 8vh;
+  font-size: 2em;
+  
+  border: 5px solid black;
+  margin: 1%;
+}
+
+/* This is the styling for the main Sudoku header across the top of the App
+ *
+*/
+#Title{
+  font-size: 200%;
+}
+
+/* This is the styling for the div containing the options at the bottom of the app
+ */
+#Options{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 1%;
+}
+
+/* This is the styling for the buttons contained in the Options div.
+*/
+.optionButton{
+  font-size: 2em;
+}

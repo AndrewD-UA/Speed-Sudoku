@@ -1,6 +1,3 @@
-# Speed-Sudoku
-By: Group
-
 This project contains a Sudoku app with the expected functionality:
 
 The board is a 3x3 grid of sub-grids.  Each sub-grid is a 3x3 grid of buttons.
