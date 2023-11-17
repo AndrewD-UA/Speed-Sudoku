@@ -46,9 +46,9 @@ function Board() {
       <div id="Board">
             {
               gridData.map(gridSquare => (
-                <div className="gridSquare">{
+                <div className="gridSquare" key={`gridSquare${gridSquare.id}`}>{
                   gridSquare.data.map(button => {
-                    return <input className="gameButton" type="button" value={button.id}></input>
+                    return <input className="gameButton" type="button" value={button.id} key={`button${button.id}`}></input>
                   })
                 }</div>
               ))

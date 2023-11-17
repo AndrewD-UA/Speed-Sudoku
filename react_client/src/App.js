@@ -32,7 +32,7 @@ function App() {
               // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
               // This just avoids having to generate a new sequence of 1-9.
               gridData.map((gridSquare) => {
-                return <input className="inputButton" type="button" value={gridSquare.id}></input>
+                return <input className="inputButton" type="button" value={gridSquare.id} key={gridSquare.id}></input>
               })
             }
         </div>
