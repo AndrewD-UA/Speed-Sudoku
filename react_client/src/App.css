@@ -46,12 +46,12 @@
   
   margin-top: 1%;
   margin-bottom: 1%;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-left: 25%;
+  margin-right: 25%;
 }
 
 /* The gridSquare class represents each sub-grid on the sudoku board.  Each
- * element with a gridSquare class has 9 subchildren (1 for each possible input)
+ * element with a gridSquare class has 9 subchildren (1 for each possible input) 
  * Alternatively, a gridSquare represents the first dimension of the 2D array gridSquare
  * in board.js.
  * Each gridSquare, or sub-grid, is a grid parent element to 9 gameButtons.
