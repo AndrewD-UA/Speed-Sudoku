@@ -4,7 +4,7 @@
 
 import './App.css';
 import Board from './Board.js';
-import {gridData} from './Board.js';
+import {gridData} from './Board.js'
 
 // This allows us to build the <App /> tag used in the primary router in index.js
 function App() {
@@ -25,7 +25,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div id="Title">Sudoku</div>  
-        <Board />        
+        <Board />    
         <div id="Inputs">
             {
               // gridData.map pulls each individual gridSquare from gridData.  These are the sub-grids

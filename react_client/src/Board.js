@@ -37,6 +37,10 @@ export function setData(data){
 }
 
 // This function returns a Board object, built using the gridData 2D array to be used as <Board />
+// This Board object should probably be re-written with a button sub-component built custom in React
+// However, we may be able to get away with simply storing values in the value field
+
+// Currently, this acts as a nested for loop to generate a gridSquare div that contains all 9 buttons inside
 function Board() {  
     return (
       <div id="Board">
@@ -55,3 +59,4 @@ function Board() {
 
 // By default, when externally importing this class, Board will be used.  This allows tag usage.
 export default Board;
+
