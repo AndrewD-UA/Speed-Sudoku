@@ -1,13 +1,16 @@
 const mongoose = require('mongoose');
-const express = require('express')
-//const bodyParser = require('body-parser');
-//const cookieParser = require('cookie-parser');
-const app = express()
+const express = require('express');
+const path = require('path');
+const app = express();
 const hostname = 'localhost';
 const port = 5000;
 const mongoUrl = 'mongodb://localhost/myappdb';
-//app.use(express.static('public_html'));
-app.use(bodyParser.json());
+
+// directory issues, likely need to switch to index.js
+app.use(express.static(path.join(__dirname, 'react_client/public')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });//
 
 //mongodb setup
 try {
@@ -26,6 +29,28 @@ dbConnection.once("open", (_) => {
 dbConnection.on("error", (err) => {
     console.error(`connection error: ${err}`);
 });
+
+// mongo schemas
+var Schema = mongoose.Schema;
+
+var userSchema = new Schema({
+    username: String,
+    password: String,
+    friends: [{ type: Schema.Types.ObjectId }],
+});
+var User = mongoose.model('User', userSchema);
+
+// change to fit how to hold the puzzle
+var puzzleSchema = new Schema({
+    puzzle: [{ type: Schema.Types.ObjectId }],
+});
+var Puzzle = mongoose.model('Puzzle', puzzleSchema);
+
+var competitiveSchema = new Schema({
+    wins: Number,
+    timestamp: String,
+});
+var Competitive = mongoose.model('Competitive', puzzleSchema);
 
 
 //session management
@@ -65,3 +90,6 @@ function logSessions() {
 setInterval(removeSessions, 1000);
 setInterval(logSessions, 15000);
 
+app.listen(port, hostname, () => {
+    console.log(`Server running on http://${hostname}:${port}`);
+});
