@@ -26,3 +26,42 @@ dbConnection.once("open", (_) => {
 dbConnection.on("error", (err) => {
     console.error(`connection error: ${err}`);
 });
+
+
+//session management
+let sessions = {};
+
+/* Addes a new user session */
+function addSession(username) {
+  let now = Date.now();  
+  let sessID  = Math.floor(Math.random() * 1000000000);
+    sessions[username] = {id: sessID, time: now};
+    return sessID;
+}
+
+/* Removes inactive cookie sessions */
+function removeSessions() {
+  let now = Date.now();
+  let usernames = Object.keys(sessions);
+
+  for (let i = 0; i < usernames.length; i++) {
+    let last = sessions[usernames[i]].time;
+
+    // 5 minutes
+    const sessionTimeout = 5 * (60 * 1000);
+
+    if (last + sessionTimeout < now) {
+      delete session[usernames[i]];
+    }
+  }
+}
+
+/* Helper funciton to record active login sessions via console. */
+function logSessions() {
+  console.log(sessions);
+  console.log()
+}
+
+setInterval(removeSessions, 1000);
+setInterval(logSessions, 15000);
+
