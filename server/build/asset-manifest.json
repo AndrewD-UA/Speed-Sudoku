@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.aabccda2.css",
+    "main.js": "/static/js/main.e2d31021.js",
+    "index.html": "/index.html",
+    "static/media/SampleBoard.txt": "/static/media/SampleBoard.36d0e991767e48e89024.txt",
+    "main.aabccda2.css.map": "/static/css/main.aabccda2.css.map",
+    "main.e2d31021.js.map": "/static/js/main.e2d31021.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.aabccda2.css",
+    "static/js/main.e2d31021.js"
+  ]
+}
