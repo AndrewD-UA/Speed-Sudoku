@@ -98,7 +98,8 @@ export class Board extends Component{
 
           <div id="Options">
             <input className="optionButton" type="button" value="Pencil"/>
-            <input className="optionButton" type="button" value="Erase"/>
+            <input className="optionButton" type="button" value="Erase" onClick={this.storeInputValue(0)}/>
+            <input className="optionButton" type="button" value="Undo"/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>
           </header>

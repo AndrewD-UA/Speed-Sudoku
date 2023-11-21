@@ -14,7 +14,11 @@ export class SudokuButton extends Component{
     handleClick(){
         let currentCopy = this.parentBoard.getStoredInput();
         if (currentCopy !== -1){
-            this.setState({value: currentCopy});
+            if (currentCopy === 0){
+                this.setState({value: ""});
+            } else{
+                this.setState({value: currentCopy});
+            }
         }
     }
 
