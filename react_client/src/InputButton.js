@@ -10,8 +10,7 @@ export class InputButton extends Component{
     }
 
     handleClick(){
-        console.log(this.inputValue);
-        //board.updateCopyValue(this.inputValue);
+        this.parentBoard.storeInputValue(this.inputValue);
     }
 
     render(){

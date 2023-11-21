@@ -13,6 +13,7 @@ export class Board extends Component{
     super();
 
     this.gridData = [];
+    this.currentlyCopied = -1;
 
     for (let i = 1; i < 10; i++){
       this.gridSquare = [];
@@ -21,9 +22,6 @@ export class Board extends Component{
       }
         this.gridData.push({id: i, data: this.gridSquare});
     }
-
-    console.log(this.gridData)
-    //this.handleClick = this.handleClick.bind(this);
   }
 
   // This function generates a 2D array to form the board, with sequential numbering to show
@@ -41,10 +39,13 @@ export class Board extends Component{
   // are also used to generate the input buttons at the bottom.  Meanwhile, the second dimension is 0-8
   // to facilitate indexing.
 
-  handleClick(){
-      console.log(this.id);
+  storeInputValue(value){
+    this.currentlyCopied = value;
   }
 
+  getStoredInput(){
+    return this.currentlyCopied;
+  }
 
   // This function returns a Board object, built using the gridData 2D array to be used as <Board />
   // This Board object should probably be re-written with a button sub-component built custom in React
@@ -53,7 +54,7 @@ export class Board extends Component{
   // Currently, this acts as a nested for loop to generate a gridSquare div that contains all 9 buttons inside
   render(){
     return (
-      // The entire application is wrappted in a div and header.  Below the header:
+      // The entire application is wrapped in a div and header.  Below the header:
 
       // There are four distinct divs organized vertically throughout the App.
       //     <Title>
@@ -68,18 +69,19 @@ export class Board extends Component{
       // Multiple numbers can be pencilled in the same square.
       <div className="App">
         <header className="App-header">
-          <div id="Board">
-          {
+          <div id="Title">Sudoku</div> 
+          <div id="Board">{
+
+            // This double nested mapping generates the Sudoku board
             this.gridData.map(gridSquare => (
             <div className="gridSquare" key={`gridSquare${gridSquare.id}`}>
             {
               gridSquare.data.map(button => {
-                return <SudokuButton value={button.id} key={`button${button.id}`}/>
+                return <SudokuButton value={button.id} key={`button${button.id}`} board = {this}/>
               })
             }</div>
             ))
-          }
-          </div>
+          }</div>
 
           <div id="Inputs">
               {
@@ -88,7 +90,7 @@ export class Board extends Component{
                 // This just avoids having to generate a new sequence of 1-9.
                 this.gridData.map((gridSquare) => {
                   //let updateMethod = "" + onClick(gridSquare.id);
-                  return <InputButton input={gridSquare.id} key={gridSquare.id} />
+                  return <InputButton input={gridSquare.id} key={gridSquare.id} board={this}/>
                   //return <input className="inputButton" type="button" value={gridSquare.id} key={gridSquare.id} onClick={updateMethod}></input>
                 })
               }

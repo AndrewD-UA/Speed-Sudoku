@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
 
 export class SudokuButton extends Component{
+
     constructor(props){
         super();
 
-        this.defaultValue = props.value;
+        this.state = {value: props.value,
+                      default: props.isDefault};
         this.handleClick = this.handleClick.bind(this);
+        this.parentBoard = props.board;
     }
 
     handleClick(){
-        console.log(this.id);
+        let currentCopy = this.parentBoard.getStoredInput();
+        if (currentCopy !== -1){
+            this.setState({value: currentCopy});
+        }
     }
 
     render(){
         return (
-            <input className="gameButton" type="button" value={this.defaultValue} onClick={this.handleClick}></input>
+            <input className="gameButton" type="button" value={this.state.value} onClick={this.handleClick}></input>
         )
     }
 }
