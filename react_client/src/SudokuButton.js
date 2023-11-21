@@ -14,17 +14,14 @@ export class SudokuButton extends Component{
     handleClick(){
         let currentCopy = this.parentBoard.getStoredInput();
         if (currentCopy !== -1){
-            if (currentCopy === 0){
-                this.setState({value: ""});
-            } else{
-                this.setState({value: currentCopy});
-            }
+            this.setState({value: currentCopy});
         }
     }
 
     render(){
         return (
-            <input className="gameButton" type="button" value={this.state.value} onClick={this.handleClick}></input>
+            <input className="gameButton" type="button" value={this.state.value} 
+                   onClick={this.handleClick}></input>
         )
     }
 }

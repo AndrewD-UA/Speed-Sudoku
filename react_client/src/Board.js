@@ -2,9 +2,9 @@
  * Last modified: 17 NOV 23
 */
 
-import './App.css';
-import { SudokuButton as SudokuButton } from './SudokuButton.js'
-import { InputButton as InputButton} from './InputButton.js'
+import './Board.css';
+import { SudokuButton } from './SudokuButton.js'
+import { InputButton } from './InputButton.js'
 import React, { Component } from 'react';
 
 export class Board extends Component{
@@ -12,16 +12,13 @@ export class Board extends Component{
   constructor(props){
     super();
 
-    this.gridData = [];
-    this.currentlyCopied = -1;
+    this.gridData = props.data;
 
-    for (let i = 1; i < 10; i++){
-      this.gridSquare = [];
-      for (let j = 0; j < 9; j++){
-        this.gridSquare.push({id: j});
-      }
-        this.gridData.push({id: i, data: this.gridSquare});
+    this.state = {
+      eraseMode: false
     }
+
+    this.currentlyCopied = -1;
   }
 
   // This function generates a 2D array to form the board, with sequential numbering to show
@@ -77,7 +74,7 @@ export class Board extends Component{
             <div className="gridSquare" key={`gridSquare${gridSquare.id}`}>
             {
               gridSquare.data.map(button => {
-                return <SudokuButton value={button.id} key={`button${button.id}`} board = {this}/>
+                return <SudokuButton id={button.id} value={button.value} key={`button${button.id}`} board = {this}/>
               })
             }</div>
             ))
@@ -98,7 +95,7 @@ export class Board extends Component{
 
           <div id="Options">
             <input className="optionButton" type="button" value="Pencil"/>
-            <input className="optionButton" type="button" value="Erase" onClick={this.storeInputValue(0)}/>
+            <input className="optionButton" id="eraseButton "type="button" value="Erase" onClick={() => {this.currentlyCopied = "";}}/>
             <input className="optionButton" type="button" value="Undo"/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>
