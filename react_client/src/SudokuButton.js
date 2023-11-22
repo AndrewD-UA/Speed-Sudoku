@@ -9,19 +9,25 @@ export class SudokuButton extends Component{
                       default: props.isDefault};
         this.handleClick = this.handleClick.bind(this);
         this.parentBoard = props.board;
+        this.boardLocation = props.id;
     }
 
     handleClick(){
         let currentCopy = this.parentBoard.getStoredInput();
         if (currentCopy !== -1){
-            this.setState({value: currentCopy});
+            this.parentBoard.moves.push({button: this, oldValue: this.state.value});
+            this.updateValue(currentCopy);
         }
+    }
+
+    updateValue(newValue){
+        this.setState({value: newValue});
     }
 
     render(){
         return (
             <input className="gameButton" type="button" value={this.state.value} 
-                   onClick={this.handleClick}></input>
+                   onClick={this.handleClick} id = {this.boardLocation}></input>
         )
     }
 }

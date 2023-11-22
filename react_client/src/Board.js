@@ -13,6 +13,8 @@ export class Board extends Component{
     super();
 
     this.gridData = props.data;
+    this.moves = [];
+    this.lastMove = "No last move";
 
     this.state = {
       eraseMode: false
@@ -42,6 +44,16 @@ export class Board extends Component{
 
   getStoredInput(){
     return this.currentlyCopied;
+  }
+
+  undo(){
+    if (this.moves.length === 0){
+      return "Cannot undo";
+    }
+
+    this.lastMove = this.moves.pop();
+    this.lastMove.button.updateValue(this.lastMove.oldValue);
+    return "Undo successful";
   }
 
   // This function returns a Board object, built using the gridData 2D array to be used as <Board />
@@ -74,7 +86,7 @@ export class Board extends Component{
             <div className="gridSquare" key={`gridSquare${gridSquare.id}`}>
             {
               gridSquare.data.map(button => {
-                return <SudokuButton id={button.id} value={button.value} key={`button${button.id}`} board = {this}/>
+                return <SudokuButton id={`${gridSquare.id}${button.id}`} value={button.value} key={`button${button.id}`} board = {this}/>
               })
             }</div>
             ))
@@ -96,7 +108,7 @@ export class Board extends Component{
           <div id="Options">
             <input className="optionButton" type="button" value="Pencil"/>
             <input className="optionButton" id="eraseButton "type="button" value="Erase" onClick={() => {this.currentlyCopied = "";}}/>
-            <input className="optionButton" type="button" value="Undo"/>
+            <input className="optionButton" type="button" value="Undo" onClick={() => console.log(this.undo())}/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>
           </header>
