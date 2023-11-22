@@ -3,14 +3,11 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const hostname = 'localhost';
-const port = 5000;
+const port = process.env.port || 3000;
 const mongoUrl = 'mongodb://localhost/myappdb';
 
-// directory issues, likely need to switch to index.js
-app.use(express.static(path.join(__dirname, 'react_client/public')));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });//
+app.listen(port, hostname, () => console.log(`Server running on http://${hostname}:${port}`));
+app.use(express.static("build"));
 
 //mongodb setup
 try {
@@ -89,7 +86,3 @@ function logSessions() {
 
 setInterval(removeSessions, 1000);
 setInterval(logSessions, 15000);
-
-app.listen(port, hostname, () => {
-    console.log(`Server running on http://${hostname}:${port}`);
-});
