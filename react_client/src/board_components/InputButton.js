@@ -15,7 +15,7 @@ export class InputButton extends Component{
 
     render(){
         return (
-            <input  className="inputButton" type="button" value={this.inputValue} onClick={this.handleClick}></input>
+            <input className="inputButton" type="button" value={this.inputValue} onClick={this.handleClick}></input>
         )
     }
 }

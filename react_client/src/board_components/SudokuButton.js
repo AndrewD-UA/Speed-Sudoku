@@ -15,8 +15,12 @@ export class SudokuButton extends Component{
     handleClick(){
         let currentCopy = this.parentBoard.getStoredInput();
         if (currentCopy !== -1){
-            this.parentBoard.moves.push({button: this, oldValue: this.state.value});
-            this.updateValue(currentCopy);
+            if (this.parentBoard.checkIfValid(this.boardLocation)){
+                this.parentBoard.moves.push({button: this, oldValue: this.state.value});
+                this.updateValue(currentCopy);
+            } else {
+                
+            }
         }
     }
 

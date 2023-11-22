@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import {Board} from './Board.js';
-import file from './SampleBoard.txt';
+import file from './board_storage/SampleBoard.txt';
 //import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

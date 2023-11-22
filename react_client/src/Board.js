@@ -3,8 +3,10 @@
 */
 
 import './Board.css';
-import { SudokuButton } from './SudokuButton.js'
-import { InputButton } from './InputButton.js'
+import { SudokuButton } from './board_components/SudokuButton.js'
+import { InputButton } from './board_components/InputButton.js'
+import { EraseButton } from './board_components/EraseButton.js'
+import { PencilButton } from './board_components/PencilButton.js'
 import React, { Component } from 'react';
 
 export class Board extends Component{
@@ -15,10 +17,6 @@ export class Board extends Component{
     this.gridData = props.data;
     this.moves = [];
     this.lastMove = "No last move";
-
-    this.state = {
-      eraseMode: false
-    }
 
     this.currentlyCopied = -1;
   }
@@ -38,6 +36,22 @@ export class Board extends Component{
   // are also used to generate the input buttons at the bottom.  Meanwhile, the second dimension is 0-8
   // to facilitate indexing.
 
+  erase(){
+    console.log(this.state.eraseMode);
+    if (this.state.eraseMode === false){
+      this.setState({
+        eraseMode: true
+      });
+    } else{
+      this.setState({
+        eraseMode: false
+      })
+    }
+
+    console.log(this.state.eraseMode);
+    this.currentlyCopied = "";
+  }
+
   storeInputValue(value){
     this.currentlyCopied = value;
   }
@@ -54,6 +68,10 @@ export class Board extends Component{
     this.lastMove = this.moves.pop();
     this.lastMove.button.updateValue(this.lastMove.oldValue);
     return "Undo successful";
+  }
+
+  checkIfValid(coordinates){
+    return true;
   }
 
   // This function returns a Board object, built using the gridData 2D array to be used as <Board />
@@ -98,16 +116,14 @@ export class Board extends Component{
                 // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
                 // This just avoids having to generate a new sequence of 1-9.
                 this.gridData.map((gridSquare) => {
-                  //let updateMethod = "" + onClick(gridSquare.id);
                   return <InputButton input={gridSquare.id} key={gridSquare.id} board={this}/>
-                  //return <input className="inputButton" type="button" value={gridSquare.id} key={gridSquare.id} onClick={updateMethod}></input>
                 })
               }
           </div>
 
           <div id="Options">
-            <input className="optionButton" type="button" value="Pencil"/>
-            <input className="optionButton" id="eraseButton "type="button" value="Erase" onClick={() => {this.currentlyCopied = "";}}/>
+            <PencilButton board={this}/>
+            <EraseButton board={this}/>
             <input className="optionButton" type="button" value="Undo" onClick={() => console.log(this.undo())}/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>

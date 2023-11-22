@@ -109,5 +109,14 @@
 /* This is the styling for the buttons contained in the Options div.
 */
 .optionButton{
+  border: 0.2em outset black;
   font-size: 2em;
+}
+
+/* This is the style for the erase button when it is pressed
+*/
+.toggledOptionButton{
+  border: 0.2em inset black;
+  font-size: 2em;
+  background-color: red;
 }
