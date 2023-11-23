@@ -85,7 +85,20 @@
   width: 8vh;
   font-size: 2em;
   
-  border: 5px solid black;
+  border: 0.1em outset black;
+  margin: 1%;
+}
+
+/* An inputButton after it has been pressed.  This CSS
+ * styling applies to each individual button.
+ */
+ .toggledInputButton{
+  height: 8vh;
+  width: 8vh;
+  font-size: 2em;
+  
+  border: 0.1em inset black;
+  background-color: rgb(92, 181, 212);
   margin: 1%;
 }
 

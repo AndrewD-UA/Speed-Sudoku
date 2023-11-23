@@ -124,7 +124,7 @@ export class Board extends Component{
           <div id="Options">
             <PencilButton board={this}/>
             <EraseButton board={this}/>
-            <input className="optionButton" type="button" value="Undo" onClick={() => console.log(this.undo())}/>
+            <input className="optionButton" type="button" value="Undo" onClick={() => this.undo()}/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>
           </header>

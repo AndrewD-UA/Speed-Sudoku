@@ -29,7 +29,6 @@ export class PencilButton extends Component{
     handleMouseDown(){
         this.held = true;
         this.togglePencilMode();
-        console.log("clicked");
     }
 
     handleMouseOut(){
