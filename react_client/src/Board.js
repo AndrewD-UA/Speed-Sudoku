@@ -7,7 +7,7 @@ import { SudokuButton } from './board_components/SudokuButton.js'
 import { InputButton } from './board_components/InputButton.js'
 import { EraseButton } from './board_components/EraseButton.js'
 import { PencilButton } from './board_components/PencilButton.js'
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 
 export class Board extends Component{
 
@@ -124,11 +124,28 @@ export class Board extends Component{
           <div id="Options">
             <PencilButton board={this}/>
             <EraseButton board={this}/>
-            <input className="optionButton" type="button" value="Undo" onClick={() => this.undo()}/>
+            <UndoButton board={this}/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>
           </header>
       </div>
     );
   }
+}
+
+function UndoButton(props){
+  const [pressed, setPressed] = useState(false);
+
+  const handleMouseDown = () => {
+    setPressed(true);
+  };
+
+  const handleMouseUp = () => {
+    setPressed(false);
+    props.board.undo();
+  };
+
+  return <input className={pressed ? "toggledOptionButton" : "optionButton"}
+                type="button" value="Undo" //onClick={() => this.undo()} 
+                onMouseDown = {handleMouseDown} onMouseUp = {handleMouseUp}/>
 }
