@@ -10,6 +10,9 @@ export class SudokuButton extends Component{
         this.handleClick = this.handleClick.bind(this);
         this.parentBoard = props.board;
         this.boardLocation = props.id;
+
+        this.valueRef = React.createRef();
+        //setInterval(() => console.log(this.valueRef.current), 10000)
     }
 
     handleClick(){
@@ -30,7 +33,7 @@ export class SudokuButton extends Component{
 
     render(){
         return (
-            <input className="gameButton" type="button" value={this.state.value} 
+            <input className="gameButton" type="button" value={this.state.value} ref={this.valueRef}
                    onClick={this.handleClick} id = {this.boardLocation}></input>
         )
     }

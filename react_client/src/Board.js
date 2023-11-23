@@ -71,6 +71,11 @@ export class Board extends Component{
   }
 
   checkIfValid(coordinates){
+    let subGrid = parseInt(coordinates.substring(0, 1));
+    let subGridPrecise = parseInt(coordinates.substring(1, 2));
+    console.log(subGrid);
+    console.log(subGridPrecise);
+    console.log(React.Children.map((child) => console.log(child)));
     return true;
   }
 
@@ -146,6 +151,6 @@ function UndoButton(props){
   };
 
   return <input className={pressed ? "toggledOptionButton" : "optionButton"}
-                type="button" value="Undo" //onClick={() => this.undo()} 
+                type="button" value="Undo"
                 onMouseDown = {handleMouseDown} onMouseUp = {handleMouseUp}/>
 }

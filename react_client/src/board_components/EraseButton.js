@@ -10,14 +10,9 @@ export class EraseButton extends Component{
 
         this.held = false;
         this.parentBoard = props.board;
-        this.handleClick = this.handleClick.bind(this);
         this.handleMouseDown = this.handleMouseDown.bind(this);
         this.handleMouseOut = this.handleMouseOut.bind(this);
         this.handleMouseUp = this.handleMouseUp.bind(this);
-    }
-
-    handleClick(){
-        
     }
 
     toggleEraseMode(){
