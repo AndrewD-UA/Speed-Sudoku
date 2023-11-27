@@ -86,3 +86,73 @@ function logSessions() {
 
 setInterval(removeSessions, 1000);
 setInterval(logSessions, 15000);
+
+function authenticate(req, res, next) {
+  let c = req.cookies;
+  console.log('auth request:');
+  console.log(req.cookies);
+  if (c != undefined) {
+    if (sessions[c.login.username] != undefined && 
+      sessions[c.login.username].id == c.login.sessionID) {
+      next();
+    } else {
+      res.redirect('/index.html');
+    }
+  }  else {
+    res.redirect('/index.html');
+  }
+}
+
+app.use('/app/*', authenticate);
+app.get('/app/*', (req, res, next) => { 
+  console.log('another');
+  next();
+});
+
+// Get users
+app.get('/get/users', (req, res) => {
+  User.find()
+      .then(users => {
+          res.json(users);
+      })
+      .catch(err => {
+          console.error('Error:', err);
+          res.status(500).json({ error: 'Failed' });
+      });
+});
+
+// Add user Post
+app.post('/add/user', (req, res) => {
+  var { username, password } = req.body;
+  var newUser = new User({ username, password });
+  newUser.save()
+      .then(userSaved => {
+          res.json(userSaved);
+      })
+      .catch(err => {
+          console.error('Error:', err);
+          res.status(500).json({ error: 'Failed' });
+      });
+});
+
+// Login to account
+app.post('/login', function (req, res) {
+  console.log(sessions);
+  let u = req.body;
+  User.findOne({ username: u.username, password: u.password })
+      .then(user => {
+          if (user) {
+              let sid = addSession(u.username);  
+              res.cookie("login", 
+                  {username: u.username, sessionID: sid}, 
+                  {maxAge: 60000 * 2 });
+              res.json({ success: true });        
+          } else {
+              res.json({ success: false });
+          }
+      })
+      .catch(err => {
+          console.error(err);
+          res.status(500).json({ success: false, error: 'Internal server error' });
+      });
+});
