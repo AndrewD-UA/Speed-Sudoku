@@ -19,10 +19,11 @@ export class SudokuButton extends Component{
         let currentCopy = this.parentBoard.getStoredInput();
         if (currentCopy !== -1){
             if (this.parentBoard.checkIfValid(this.boardLocation)){
+                console.log("valid");
                 this.parentBoard.moves.push({button: this, oldValue: this.state.value});
                 this.updateValue(currentCopy);
             } else {
-                
+                console.log("Not valid");
             }
         }
     }

@@ -71,11 +71,70 @@ export class Board extends Component{
   }
 
   checkIfValid(coordinates){
-    let subGrid = parseInt(coordinates.substring(0, 1));
-    let subGridPrecise = parseInt(coordinates.substring(1, 2));
+    console.log(this.gridData);
+    let gridSquare = parseInt(coordinates.substring(0, 1));
+    let subGrid = parseInt(coordinates.substring(1, 2));
+    console.log(gridSquare);
     console.log(subGrid);
-    console.log(subGridPrecise);
-    console.log(React.Children.map((child) => console.log(child)));
+    console.log(this.gridData);
+
+    let checkSquare = subGrid;
+    if (checkSquare % 3 === 0){
+      checkSquare += 1;
+    }
+
+    if (checkSquare % 2 === 0){
+      checkSquare -= 1;
+    }
+
+    // Horizontal checks
+    for (let i = gridSquare - 1; i < gridSquare + 2; i++){
+      if (i > 8){
+        i -= 9;
+      }
+
+      for (let j = checkSquare - 1; j < checkSquare + 2; j++){
+        if (j > 8){
+          j -= 9;
+        }
+
+        console.log(this.gridData[i]);
+        let currentData = parseInt(this.gridData[i].data[j].value);
+        console.log("Checking " + i + j + "with value" + currentData);
+        if (currentData === this.currentlyCopied){
+          return false;
+        }
+      }
+    }
+
+    // Same square checks
+    for (let i = 0; i < 9; i++){
+      let currentData = parseInt(this.gridData[gridSquare].data[i].value);
+      if (currentData === this.currentlyCopied){
+        return false;
+      }
+    }
+
+    // Vertical checks
+    for (let i = 1; i < 4; i++){
+      for (let j = 0; j < 3; j++){
+        let currentData = parseInt(this.gridData[gridSquare].data[subGrid].value);
+        if (currentData === this.currentlyCopied){
+          return false;
+        }
+
+        subGrid += 3;
+        if (subGrid > 8){
+          subGrid -= 9;
+        }
+      }
+
+      gridSquare += 3;
+      if (gridSquare > 9){
+        gridSquare -= 9;
+      }
+    }
+
     return true;
   }
 
@@ -105,14 +164,14 @@ export class Board extends Component{
           <div id="Board">{
 
             // This double nested mapping generates the Sudoku board
-            this.gridData.map(gridSquare => (
-            <div className="gridSquare" key={`gridSquare${gridSquare.id}`}>
-            {
-              gridSquare.data.map(button => {
-                return <SudokuButton id={`${gridSquare.id}${button.id}`} value={button.value} key={`button${button.id}`} board = {this}/>
-              })
-            }</div>
-            ))
+            this.gridData.map(gridSquare => {
+              return <div className="gridSquare" key={`gridSquare${gridSquare.id}`}>
+              {
+                gridSquare.data.map((button) => {
+                  return <SudokuButton id={`${gridSquare.id}${button.id}`} value={button.value} key={`button${button.id}`} board = {this}/>
+                })
+              }</div>
+            })
           }</div>
 
           <div id="Inputs">
