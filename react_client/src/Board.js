@@ -150,7 +150,13 @@ function UndoButton(props){
     props.board.undo();
   };
 
+  const handleMouseOut = () => {
+    setPressed(false);
+  }
+
   return <input className={pressed ? "toggledOptionButton" : "optionButton"}
                 type="button" value="Undo"
-                onMouseDown = {handleMouseDown} onMouseUp = {handleMouseUp}/>
+                onMouseDown = {handleMouseDown} 
+                onMouseUp = {handleMouseUp}
+                onMouseOut = {handleMouseOut}/>
 }
