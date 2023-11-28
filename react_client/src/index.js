@@ -7,15 +7,6 @@ import {Board} from './Board.js';
 
 //react-scripts --openssl-legacy-provider start
 const root = ReactDOM.createRoot(document.getElementById('root'));
-/*
-let gridData = [];
-for (let i = 1; i < 10; i++){
-  let gridSquare = [];
-  for (let j = 0; j < 9; j++){
-    gridSquare.push({id: j});
-  }
-    gridData.push({id: i, data: gridSquare});
-}*/
 
 let practiceSudoku = "   4   6\n5 4 3    \n7     1  \n  6 4 217\n         \n   5 24  \n  9  8   \n 2  1  56\n  63 7  1";
 let practiceData = processData();

@@ -71,12 +71,8 @@ export class Board extends Component{
   }
 
   checkIfValid(coordinates){
-    console.log(this.gridData);
     let gridSquare = parseInt(coordinates.substring(0, 1));
     let subGrid = parseInt(coordinates.substring(1, 2));
-    console.log(gridSquare);
-    console.log(subGrid);
-    console.log(this.gridData);
 
     let checkSquare = subGrid;
     if (checkSquare % 3 === 0){
@@ -98,9 +94,7 @@ export class Board extends Component{
           j -= 9;
         }
 
-        console.log(this.gridData[i]);
         let currentData = parseInt(this.gridData[i].data[j].value);
-        console.log("Checking " + i + j + "with value" + currentData);
         if (currentData === this.currentlyCopied){
           return false;
         }
