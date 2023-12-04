@@ -153,8 +153,8 @@ export class Board extends Component{
       // Pencil is intended to be used to emplace a mark on the sudoku board without it counting
       // Multiple numbers can be pencilled in the same square.
       <div className="App">
-        <header className="App-header">
-          <div id="Title">Sudoku</div> 
+        <AppHeader />
+        <div className="App-body">
           <div id="Board">{
 
             // This double nested mapping generates the Sudoku board
@@ -166,9 +166,9 @@ export class Board extends Component{
                 })
               }</div>
             })
-          }</div>
+            }</div>
 
-          <div id="Inputs">
+            <div id="Inputs">
               {
                 // gridData.map pulls each individual gridSquare from gridData.  These are the sub-grids
                 // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
@@ -177,20 +177,25 @@ export class Board extends Component{
                   return <InputButton input={gridSquare.id} key={gridSquare.id} board={this}/>
                 })
               }
-          </div>
+            </div>
 
-          <div id="Options">
+            <div id="Options">
             <PencilButton board={this}/>
             <EraseButton board={this}/>
             <UndoButton board={this}/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>
-          </header>
+        </div>
       </div>
     );
   }
 }
 
+/**
+ * Function to generate the Undo button and handle the undo functionality
+ * @param {*} props 
+ * @returns HTML layout of the undo button
+ */
 function UndoButton(props){
   const [pressed, setPressed] = useState(false);
 
@@ -212,4 +217,13 @@ function UndoButton(props){
                 onMouseDown = {handleMouseDown} 
                 onMouseUp = {handleMouseUp}
                 onMouseOut = {handleMouseOut}/>
+}
+
+export function AppHeader(){
+  return (
+    <header className="App-header">
+      <div id="Title">Speed Sudoku</div>
+      <h2 className="subTitle">A competitive Sudoku website!</h2>    
+    </header>
+  )
 }
