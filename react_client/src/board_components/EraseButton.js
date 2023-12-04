@@ -17,7 +17,7 @@ export class EraseButton extends Component{
 
     toggleEraseMode(){
         if (this.state.eraseMode === false){
-            this.parentBoard.storeInputValue("");
+            this.parentBoard.storeInputValue(" ");
             this.setState({
                 eraseMode: true
             });

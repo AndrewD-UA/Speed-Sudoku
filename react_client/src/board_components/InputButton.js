@@ -14,15 +14,15 @@ export class InputButton extends Component{
     }
 
     toggleUsageMode(){
-        if (this.state.currentlySelected === false){
-            this.setState({
-                currentlySelected: true
-            });
-        } else {
-            this.setState({
-                currentlySelected: false
-            });
-        }
+        this.setState({
+            currentlySelected: !this.state.currentlySelected
+        });
+    }
+
+    setUsageMode(boolState){
+        this.setState({
+            currentlySelected: boolState
+        });
     }
 
     handleClick(){

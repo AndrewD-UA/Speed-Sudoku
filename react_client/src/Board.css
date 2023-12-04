@@ -24,6 +24,11 @@
   color: white;
 }
 
+.PrimaryDisplay{
+  display: flex;
+  flex-direction: column;
+}
+
 
 /* This is the styling for the main Sudoku header across the top of the App
 */
@@ -56,6 +61,13 @@
 .gameButton{
   height: 100%;
   font-size: 2em;
+}
+
+.defaultButton{
+  height: 100%;
+  font-size: 2em;
+  background-color: #282c34;
+  color: white;
 }
 
 /* The Board ID represents the div containing the entire Sudoku board, and nothing else.

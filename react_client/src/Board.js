@@ -3,10 +3,10 @@
 */
 
 import './Board.css';
-import { SudokuButton } from './board_components/SudokuButton.js'
 import { InputButton } from './board_components/InputButton.js'
 import { EraseButton } from './board_components/EraseButton.js'
 import { PencilButton } from './board_components/PencilButton.js'
+import { SubBoard } from './board_components/SubBoard.js'
 import React, { Component, useState } from 'react';
 
 export class Board extends Component{
@@ -15,62 +15,65 @@ export class Board extends Component{
     super();
 
     this.gridData = props.data;
+    this.initialData = props.data;
+
     this.moves = [];
     this.lastMove = "No last move";
 
-    this.currentlyCopied = -1;
-  }
-
-  // This function generates a 2D array to form the board, with sequential numbering to show
-  // the layout of the board.  The first dimension of the board is the Grid number:
-  // [1] [2] [3]
-  // [4] [5] [6]
-  // [7] [8] [9]
-  // The second dimension of the 2D array is the 3x3 grid contained within each grid Section.
-  // For example, Grid [1] above can be represented as such:
-  // [ 0, 1, 2
-  //   3, 4, 5 
-  //   6, 7, 8 ]
-
-  // The numbering scheme for the first dimension of the Array was chosen as 1-9 because these numbers
-  // are also used to generate the input buttons at the bottom.  Meanwhile, the second dimension is 0-8
-  // to facilitate indexing.
-
-  erase(){
-    console.log(this.state.eraseMode);
-    if (this.state.eraseMode === false){
-      this.setState({
-        eraseMode: true
-      });
-    } else{
-      this.setState({
-        eraseMode: false
-      })
+    this.state = {
+        0 :   this.gridData[0].data,
+        1 :   this.gridData[1].data,
+        2 :   this.gridData[2].data,
+        3 :   this.gridData[3].data,
+        4 :   this.gridData[4].data,
+        5 :   this.gridData[5].data,
+        6 :   this.gridData[6].data,
+        7 :   this.gridData[7].data,
+        8 :   this.gridData[8].data
     }
 
-    console.log(this.state.eraseMode);
-    this.currentlyCopied = "";
+    this.currentlyCopied = -1;
+  }
+  updateBoard(subBoardId, buttonId, isUndo){
+    this.updateBoardAll(subBoardId, buttonId, this.currentlyCopied, isUndo);
+  }
+
+  updateBoardAll(subBoardId, buttonId, newValue, isUndo){
+    if (newValue < 1 && newValue != " "){
+      return;
+    }
+
+    let localCopy = [...this.state[subBoardId]]
+
+    if (!isUndo){
+      this.moves.push({
+        subBoard: subBoardId,
+        button: buttonId,
+        oldValue: localCopy[buttonId]
+      });
+    }
+
+    localCopy[buttonId] = newValue.toString();    
+    this.setState({
+      [subBoardId ] : localCopy
+    })
   }
 
   storeInputValue(value){
     this.currentlyCopied = value;
   }
 
-  getStoredInput(){
-    return this.currentlyCopied;
-  }
-
   undo(){
     if (this.moves.length === 0){
-      return "Cannot undo";
+      return;
     }
 
-    this.lastMove = this.moves.pop();
-    this.lastMove.button.updateValue(this.lastMove.oldValue);
-    return "Undo successful";
+    let lastMove = this.moves.pop();
+    console.log(lastMove);
+    this.updateBoardAll(lastMove.subBoard, lastMove.button, lastMove.oldValue, true)
   }
 
-  checkIfValid(coordinates){
+  /*checkIfValid(coordinates){
     let gridSquare = parseInt(coordinates.substring(0, 1));
     let subGrid = parseInt(coordinates.substring(1, 2));
 
@@ -130,7 +133,7 @@ export class Board extends Component{
     }
 
     return true;
-  }
+  }*/
 
   // This function returns a Board object, built using the gridData 2D array to be used as <Board />
   // This Board object should probably be re-written with a button sub-component built custom in React
@@ -155,47 +158,50 @@ export class Board extends Component{
       <div className="App">
         <AppHeader />
         <div className="App-body">
-          <div id="Board">{
+          <div className="PrimaryDisplay">
+            <div id="BoardSide">
 
-            // This double nested mapping generates the Sudoku board
-            this.gridData.map(gridSquare => {
-              return <div className="gridSquare" key={`gridSquare${gridSquare.id}`}>
+            </div>
+            <div id="Board">
               {
-                gridSquare.data.map((button) => {
-                  return <SudokuButton id={`${gridSquare.id}${button.id}`} value={button.value} key={`button${button.id}`} board = {this}/>
-                })
-              }</div>
-            })
-            }</div>
-
-            <div id="Inputs">
-              {
-                // gridData.map pulls each individual gridSquare from gridData.  These are the sub-grids
-                // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
-                // This just avoids having to generate a new sequence of 1-9.
-                this.gridData.map((gridSquare) => {
-                  return <InputButton input={gridSquare.id} key={gridSquare.id} board={this}/>
+                // Generates each 3x3 sub-board, which contains the actual buttons
+                Object.keys(this.state).map(subBoard => {
+                  if (!isNaN(subBoard)){
+                    return <SubBoard  subBoardData = { this.state[subBoard] } 
+                                      parent = { this } 
+                                      key = { `SubBoard${subBoard}` }
+                                      id = { subBoard } />
+                  }
                 })
               }
             </div>
+          </div>
+          
 
-            <div id="Options">
+          <div id="Inputs">
+            {
+              // gridData.map pulls each individual gridSquare from gridData.  These are the sub-grids
+              // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
+              // This just avoids having to generate a new sequence of 1-9.
+              this.gridData.map((gridSquare) => {
+                return <InputButton input={gridSquare.id} key={`InputButton${gridSquare.id}`} board={this}/>
+              })
+            }
+          </div>
+
+          <div id="Options">
             <PencilButton board={this}/>
             <EraseButton board={this}/>
             <UndoButton board={this}/>
             <input className="optionButton" type="button" value="Hint"/>
           </div>
+
         </div>
       </div>
     );
   }
 }
 
-/**
- * Function to generate the Undo button and handle the undo functionality
- * @param {*} props 
- * @returns HTML layout of the undo button
- */
 function UndoButton(props){
   const [pressed, setPressed] = useState(false);
 
