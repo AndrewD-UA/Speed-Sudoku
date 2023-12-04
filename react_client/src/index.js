@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css';
-import {Board} from './Board.js';
+import { Board } from './Board.js';
+import { Login } from './Login.js';
 //import file from './board_storage/SampleBoard.txt';
 //import reportWebVitals from './reportWebVitals';
 
@@ -26,10 +28,20 @@ function processData(){
   return gridData;
 }
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Login />
+  },
+
+  {
+    path: "/play",
+    element: <Board data= { practiceData } />,
+  }
+]);
+
 root.render(
-  <React.StrictMode>
-    <Board data={practiceData}/>
-  </React.StrictMode>
+  <RouterProvider router = { router } />
 );
 
 // If you want to start measuring performance in your app, pass a function

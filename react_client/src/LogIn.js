@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 //import './style.css'; // Assuming you have a style.css file
 
 // Define the React component
-const Login = () => {
+export const Login = () => {
   // State for login and create account forms
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -89,5 +89,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;
