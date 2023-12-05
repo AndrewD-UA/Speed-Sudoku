@@ -25,16 +25,16 @@ export const Login = () => {
       },
       body: JSON.stringify(userCredentials)
     })
-    .then(response => {
-      if (response.ok) {
-        window.location.href = "/play";
-      } else {
-        console.log('Login failed');
-      }
-    })
-    .catch(error => {
-      console.error('Error loggin in:', error);
-    });
+      .then(response => {
+        if (response.ok) {
+          window.location.href = "/play";
+        } else {
+          console.log('Login failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error loggin in:', error);
+      });
   };
 
   // Event handler for creating new user account
@@ -43,7 +43,7 @@ export const Login = () => {
       username: createUsername,
       password: createPassword
     };
-  
+
     fetch('/account/create', {
       method: 'POST',
       headers: {
@@ -51,17 +51,17 @@ export const Login = () => {
       },
       body: JSON.stringify(newUserCredentials)
     })
-    .then(response => {
-      if (response.ok) {
-        console.log('Account created successfully');
-        // Additional handling if needed after account creation
-      } else {
-        console.log('Account creation failed');
-      }
-    })
-    .catch(error => {
-      console.error('Error creating account:', error);
-    });
+      .then(response => {
+        if (response.ok) {
+          console.log('Account created successfully');
+          // Additional handling if needed after account creation
+        } else {
+          console.log('Account creation failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error creating account:', error);
+      });
   };
 
   return (
