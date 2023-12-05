@@ -4,11 +4,9 @@ export class SudokuButton extends Component{
 
     constructor(props){
         super();
-        this.isError = false;
-        this.initialValue = props.value;
 
         this.isDefault = false;
-        if (this.initialValue !== " "){
+        if (props.value !== " "){
             this.isDefault = true;
         }
         
@@ -28,6 +26,15 @@ export class SudokuButton extends Component{
 
     }
 
+    setErrored(){
+        this.setState({
+            inError: true
+        });
+    }
+    /**
+     * If this is not a default square, send the update request up to the board.
+     * @returns Null
+     */
     handleClick(){
         if (this.isDefault){
             return;
@@ -41,7 +48,7 @@ export class SudokuButton extends Component{
      * Instead, the pencil marks are statically stored and only updated when a new element is detected.
      * @returns     A reference to this.pencilHTML, which stores the pencilMarks.
      */
-    getPencilMarks(){        
+    getPencilMarks(){   
         if (this.pencils.length !== this.props.pencils.length){
             this.pencils = [...this.props.pencils];
 
@@ -55,6 +62,11 @@ export class SudokuButton extends Component{
         return this.pencilHTML;     
     }
 
+    /**
+     * Render function returns a parent container buttonSpace
+     * buttonSpace contains both the input button and an overlay, used for pencil mode.
+     * @returns parent container buttonSpace with button and overlay
+     */
     render(){
         return  <div className="buttonSpace">       
                     <input  className= { this.isDefault ? 

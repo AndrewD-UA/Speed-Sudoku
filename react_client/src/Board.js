@@ -77,7 +77,6 @@ export class Board extends Component{
    * @param {Boolean} isUndo    Boolean repr of whethere this update is an undo operation
    */
   updateBoard(subBoardId, buttonId, isUndo){
-    //console.log(this.state.pencilMode);
     if (this.state.pencilMode){
       this.pencilInBoard(subBoardId, buttonId, this.state.currentlyCopied);
       return;
@@ -102,14 +101,13 @@ export class Board extends Component{
    * @returns 
    */
   pencilInBoard(subBoardId, buttonId, newValue){
-    //console.log("clicked");
     if (!this.state.pencilMode){
       return;
     }
 
-    /*if (this.state[subBoardId].data[buttonId] !== " "){
+    if (this.state[subBoardId][buttonId] !== " "){
       return;
-    }*/
+    }
 
     if (isNaN(newValue)){
       return;
@@ -138,7 +136,6 @@ export class Board extends Component{
    * @returns 
    */
   updateBoardAll(subBoardId, buttonId, newValue, isUndo){
-    //console.log(this.state.pencilMode);
     if (!this.validatePlacement(subBoardId, buttonId, newValue)){
       return;
     }
