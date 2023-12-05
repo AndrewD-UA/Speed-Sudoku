@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { AppHeader } from './Board.js';
+import './style.css';
+import './Board.css';
 
 export const Login = () => {
   const [loginUsername, setLoginUsername] = useState('');
@@ -18,7 +21,7 @@ export const Login = () => {
       password: loginPassword
     };
 
-    fetch('/login', {
+    fetch('localhost:80/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'applications/json'
@@ -64,69 +67,91 @@ export const Login = () => {
       });
   };
 
+  /**
+   * Adds functionality to, given event, trigger action if it enter.
+   * Primarily used to create account/login with enter key.
+   * @param {KeyboardEvent} event KeyEvent logged
+   * @param {Callback} action     Action to perform if it is enter
+   */
+  function checkIfEnter(event, action){
+    if (event.code === "Enter"){
+      action();
+    }
+    console.log(event);
+  }
+
   return (
-    <div>
-      <style>{`
-        body {
-          background-color: #aee9f5;
-        }
-      `}</style>
-      <div className="login" id="loginClass">
-        <h1>Log In</h1>
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={loginUsername}
-            onChange={(e) => setLoginUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={loginPassword}
-            onChange={(e) => setLoginPassword(e.target.value)}
-          />
-        </div>
-        <button type="button" id="login" onClick={loggingIn} value="Log In">
-          Login
-        </button>
+    <div className= "App">
+      <AppHeader />
+      <div className="imgContainer">
+        <img src={require("./img/banner.gif")} />
       </div>
-      <div className="create" id="create">
-        <h1>Create Account</h1>
-        <div>
-          <label htmlFor="createUsername">Username</label>
-          <input
-            type="text"
-            id="createUsername"
-            name="createUsername"
-            value={createUsername}
-            onChange={(e) => setCreateUsername(e.target.value)}
-          />
+      <div className="landingOptions">
+        <div className="inputField" id="loginClass">
+          <h1>Log In</h1>
+          <div>
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={loginUsername}
+              onChange={(e) => setLoginUsername(e.target.value)}
+              onKeyDown={(e => checkIfEnter(e, loggingIn))}
+              className="loginInput"
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              onKeyDown={(e => checkIfEnter(e, loggingIn))}
+              className="loginInput"
+            />
+          </div>
+          <button type="button" id="login" onClick={loggingIn} value="Log In">
+            Login
+          </button>
         </div>
-        <div>
-          <label htmlFor="createPassword">Password</label>
-          <input
-            type="password"
-            id="createPassword"
-            name="createPassword"
-            value={createPassword}
-            onChange={(e) => setCreatePassword(e.target.value)}
-          />
+        <div className="inputField" id="create">
+          <h1>Create Account</h1>
+          <div>
+            <label htmlFor="createUsername">Username</label>
+            <input
+              type="text"
+              id="createUsername"
+              name="createUsername"
+              value={createUsername}
+              onChange={(e) => setCreateUsername(e.target.value)}
+              onKeyDown={(e => checkIfEnter(e, creatingAccount))}
+              className="loginInput"
+            />
+          </div>
+          <div>
+            <label htmlFor="createPassword">Password</label>
+            <input
+              type="password"
+              id="createPassword"
+              name="createPassword"
+              value={createPassword}
+              onChange={(e) => setCreatePassword(e.target.value)}
+              onKeyDown={(e => checkIfEnter(e, creatingAccount))}
+              className="loginInput"
+            />
+          </div>
+          <button
+            type="button"
+            id="addUser"
+            onClick={creatingAccount}
+            value="Add User"
+          >
+            Create
+          </button>
         </div>
-        <button
-          type="button"
-          id="addUser"
-          onClick={creatingAccount}
-          value="Add User"
-        >
-          Create
-        </button>
       </div>
     </div>
   );

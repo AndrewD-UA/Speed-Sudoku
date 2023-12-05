@@ -1,0 +1,59 @@
+/* This is the default CSS generated when you make a new React app.
+ * This class contains the entire Sudoku gameplay webpage.  
+ * This class being a flexbox allows for the vertical alignment of the entire page.
+*/
+.App-header {
+    margin: 0;
+    font-size: calc(10px + 2vmin);
+    height: 10vh;
+    color: white;
+  }
+  
+  /* This is the styling for the main Sudoku header across the top of the App
+  */
+  #Title{
+    font-size: 200%;
+    margin-bottom: 0%;
+  }
+  /* This is the styling for the text underneath the main Sudoku header at the top of the App
+  */
+  .subTitle{
+    font-size: 50%;
+    margin-top: 0%;
+  }
+
+body {
+    background-color: #aee9f5;
+}
+
+.imgContainer{
+    width: 100%;
+    background-color: black;
+}
+
+.landingOptions{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+h1{
+    font-size: 400%;
+}
+
+label{
+    font-size: 200%;
+}
+
+.loginInput{
+    font-size: 200%;
+    margin-left: 5%;
+}
+
+button {
+    font-size: 200%;
+}
+
+.inputField {
+    width: 35%;
+}

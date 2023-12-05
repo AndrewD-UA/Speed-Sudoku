@@ -129,7 +129,7 @@ export class Board extends Component{
    * @returns 
    */
   updateBoardAll(subBoardId, buttonId, newValue, isUndo){
-    if (newValue < 1 && newValue != " "){
+    if (newValue < 1 && newValue !== " "){
       return;
     }
 
@@ -167,11 +167,11 @@ export class Board extends Component{
    * @returns                   Boolean repr of whether this is a valid entry
    */
   validatePlacement(subBoardId, buttonId, newValue){
-    if (newValue == " "){
+    if (newValue === " "){
       return true;
     }
 
-    if (this.solution[subBoardId].data[buttonId] == newValue){
+    if (this.solution[subBoardId].data[buttonId] === newValue){
       return true;
     }
 
@@ -215,7 +215,6 @@ export class Board extends Component{
   }
 
   renderBoard() {
-    console.log("Board being rendered");
     if (this.state.win){
       return (
         <div className="loseBox">

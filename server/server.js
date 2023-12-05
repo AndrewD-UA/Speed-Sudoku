@@ -145,7 +145,7 @@ app.post('/login', function (req, res) {
         let sid = addSession(u.username);
         res.cookie("login",
           { username: u.username, sessionID: sid },
-          { maxAge: 60000 * 2 });
+          { maxAge: 60000000000 * 2 });
         res.json({ success: true });
       } else {
         res.json({ success: false });
