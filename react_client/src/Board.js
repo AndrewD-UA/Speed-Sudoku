@@ -57,10 +57,10 @@ export class Board extends Component{
   /**
    * Update the board at a given location (subBoardId, buttonId) with newValue.  Store the update
    * in the list of moves, unless it is an undo operation.  This allows future undoing.
-   * @param {*} subBoardId  Number repr of which subBoard is being updated [0-8]
-   * @param {*} buttonId    Number repr of which button in the subBoard is being updated [0-8]
-   * @param {*} newValue    Value to store at the given location
-   * @param {*} isUndo      Boolean repr of whethere this update is an undo operation
+   * @param {Number} subBoardId  Number repr of which subBoard is being updated [0-8]
+   * @param {Number} buttonId    Number repr of which button in the subBoard is being updated [0-8]
+   * @param {*} newValue         Value to store at the given location
+   * @param {Boolean} isUndo     Boolean repr of whethere this update is an undo operation
    * @returns 
    */
   updateBoardAll(subBoardId, buttonId, newValue, isUndo){
@@ -70,6 +70,10 @@ export class Board extends Component{
       return;
     }
 
+    if (!this.validatePlacement(subBoardId, buttonId, newValue)){
+      return;
+    }
+    
     // Make a copy of the current array of values
     let localCopy = [...this.state[subBoardId]]
 
@@ -87,6 +91,29 @@ export class Board extends Component{
     this.setState({
       [ subBoardId ] : localCopy
     });
+  }
+
+  /**
+   * Check if newValue is the correct solution at (subBoardId, buttonId)
+   * Erasure inputs are ignored
+   * @param {Number} subBoardId Number repr of which subBoard is being updated [0-8]
+   * @param {Number} buttonId   Number repr of which button in the subBoard is being updated [0-8]
+   * @param {Any} newValue      Value which is being checked
+   * @returns                   Boolean repr of whether this is a valid entry
+   */
+  validatePlacement(subBoardId, buttonId, newValue){
+    if (newValue == " "){
+      return true;
+    }
+
+    if (this.solution[subBoardId].data[buttonId] == newValue){
+      return true;
+    }
+
+    this.setState({
+      errors : this.state.errors + 1
+    });
+    return false;
   }
 
   /**
@@ -112,73 +139,8 @@ export class Board extends Component{
     this.updateBoardAll(lastMove.subBoard, lastMove.button, lastMove.oldValue, true)
   }
 
-  /*checkIfValid(coordinates){
-    let gridSquare = parseInt(coordinates.substring(0, 1));
-    let subGrid = parseInt(coordinates.substring(1, 2));
-
-    let checkSquare = subGrid;
-    if (checkSquare % 3 === 0){
-      checkSquare += 1;
-    }
-
-    if (checkSquare % 2 === 0){
-      checkSquare -= 1;
-    }
-
-    // Horizontal checks
-    for (let i = gridSquare - 1; i < gridSquare + 2; i++){
-      if (i > 8){
-        i -= 9;
-      }
-
-      for (let j = checkSquare - 1; j < checkSquare + 2; j++){
-        if (j > 8){
-          j -= 9;
-        }
-
-        let currentData = parseInt(this.gridData[i].data[j].value);
-        if (currentData === this.currentlyCopied){
-          return false;
-        }
-      }
-    }
-
-    // Same square checks
-    for (let i = 0; i < 9; i++){
-      let currentData = parseInt(this.gridData[gridSquare].data[i].value);
-      if (currentData === this.currentlyCopied){
-        return false;
-      }
-    }
-
-    // Vertical checks
-    for (let i = 1; i < 4; i++){
-      for (let j = 0; j < 3; j++){
-        let currentData = parseInt(this.gridData[gridSquare].data[subGrid].value);
-        if (currentData === this.currentlyCopied){
-          return false;
-        }
-
-        subGrid += 3;
-        if (subGrid > 8){
-          subGrid -= 9;
-        }
-      }
-
-      gridSquare += 3;
-      if (gridSquare > 9){
-        gridSquare -= 9;
-      }
-    }
-
-    return true;
-  }*/
-
   // This function returns a Board object, built using the gridData 2D array to be used as <Board />
-  // This Board object should probably be re-written with a button sub-component built custom in React
-  // However, we may be able to get away with simply storing values in the value field
 
-  // Currently, this acts as a nested for loop to generate a gridSquare div that contains all 9 buttons inside
   render(){
     return (
       <div className="App">

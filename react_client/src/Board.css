@@ -24,13 +24,6 @@
   color: white;
 }
 
-.PrimaryDisplay{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
-
-
 /* This is the styling for the main Sudoku header across the top of the App
 */
 #Title{
@@ -44,6 +37,8 @@
   margin-top: 0%;
 }
 
+/* This is the styline for everything below the header.
+*/
 .App-body {
   margin: 0;
   height: 85vh;
@@ -54,6 +49,15 @@
   color: white;
 }
 
+/* This is the CSS for the primary display, which encompasses everything below the header
+ * but above the input buttons.  This includes instructions, timer, errors, and board.
+ * This is a child of App-body.
+*/
+.PrimaryDisplay{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
 /* the gameButton class is used to style each individual button throughout the Sudoku board.
  * These buttons are separate from inputButtons, or any other buttons laid out throughout the 
  * primary gameplay window.
@@ -64,6 +68,8 @@
   font-size: 2em;
 }
 
+/* This is the styling for game buttons which are added by default and thus cannot be altered.
+*/
 .defaultButton{
   height: 100%;
   font-size: 2em;
@@ -87,6 +93,8 @@
   margin-right: 10%;
 }
 
+/* This styling is applied to everything to the left of the board.  #BoardLeft is the parent div
+*/
 #BoardLeft{
   width: 15vw;
   margin-left: 2vw;
@@ -97,6 +105,8 @@
   justify-content: space-evenly;
 }
 
+/* This styling is applied to everything to the right of the board.  #BoardRight is the parent div
+*/
 #BoardRight{
   margin-right: 2vw;
   margin-left: 2vw;

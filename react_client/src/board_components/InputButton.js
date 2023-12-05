@@ -13,21 +13,13 @@ export class InputButton extends Component{
         this.handleClick = this.handleClick.bind(this);
     }
 
-    toggleUsageMode(){
-        this.setState({
-            currentlySelected: !this.state.currentlySelected
-        });
-    }
-
     handleClick(){
         this.parentBoard.storeInputValue(this.inputValue);
-        this.toggleUsageMode();
     }
 
     render(){
         return (
-            <input  className= {this.state.currentlySelected && 
-                                this.parentBoard.state.currentlyCopied === this.inputValue ? 
+            <input  className= {this.parentBoard.state.currentlyCopied === this.inputValue ? 
                                     "toggledInputButton" : "inputButton"}
                     type="button" 
                     value={this.inputValue} 

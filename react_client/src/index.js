@@ -10,11 +10,14 @@ import { Login } from './Login.js';
 //react-scripts --openssl-legacy-provider start
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-let practiceSudoku = "   4   6 \n5 4 3    \n7     1  \n  6 4 217\n         \n   5 24  \n  9  8   \n 2  1  56\n  63 7  1";
-let practiceData = processData();
+let practiceData = "   4   6 \n5 4 3    \n7     1  \n  6 4 217\n         \n   5 24  \n  9  8   \n 2  1  56\n  63 7  1";
+let practiceSudoku = processData(practiceData);
 
-function processData(){
-  let rawData = practiceSudoku.split("\n");
+let solutionData = "1  4   6 \n5 4 3    \n7     1  \n  6 4 217\n         \n   5 24  \n  9  8   \n 2  1  56\n  63 7  1"
+let practiceSolution = processData(solutionData);
+
+function processData(inputData){
+  let rawData = inputData.split("\n");
   let gridData = [];
   for (let i = 0; i < 9; i++){
     let gridSquare = [];
@@ -35,7 +38,7 @@ const router = createBrowserRouter([
 
   {
     path: "/play",
-    element: <Board data= { practiceData } />,
+    element: <Board data={ practiceSudoku } solution={ practiceSolution }/>,
   }
 ]);
 
