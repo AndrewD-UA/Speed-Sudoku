@@ -58,7 +58,11 @@ export class SudokuButton extends Component{
      * Instead, the pencil marks are statically stored and only updated when a new element is detected.
      * @returns     A reference to this.pencilHTML, which stores the pencilMarks.
      */
-    getPencilMarks(){   
+    getPencilMarks(){
+        if (this.props.value !== " "){
+            return //<div></div>;
+        }   
+
         if (this.pencilsLength !== this.props.pencils.length){
             this.pencils = [...this.props.pencils];
 
@@ -91,7 +95,7 @@ export class SudokuButton extends Component{
                                     {
                                         this.getPencilMarks()
                                     }
-                                </div>
+                    </div>
                 </div>
     }
 }

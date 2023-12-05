@@ -103,12 +103,12 @@ export class Board extends Component{
       return;
     }
 
-    if (isNaN(newValue)){
+    if (isNaN(newValue) || newValue === " "){
       return;
     }
 
     let tempCopy = this.state[`pencil${subBoardId}`];
-    if (tempCopy.includes(newValue)){
+    if (tempCopy[buttonId].includes(newValue)){
       return;
     }
 
@@ -151,6 +151,7 @@ export class Board extends Component{
 
     // Modify our copy of the values, then set the state with it
     localCopy[buttonId] = newValue.toString();    
+
     this.setState({
       [ subBoardId ] : localCopy,
       [`pencil${subBoardId}`] : [[], [], [], [], [], [], [], [], []]
