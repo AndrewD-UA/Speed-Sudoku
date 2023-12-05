@@ -8,15 +8,60 @@ export const Login = () => {
 
   // Event handler for login button
   const loggingIn = () => {
-    // connect to user/pass database
+    // admin login for testing
     if (loginUsername === "admin" && loginPassword === "admin") {
       window.location.href = "/play";
     }
-    console.log('Logged in');
+
+    const userCredentials = {
+      username: loginUsername,
+      password: loginPassword
+    };
+
+    fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'applications/json'
+      },
+      body: JSON.stringify(userCredentials)
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = "/play";
+      } else {
+        console.log('Login failed');
+      }
+    })
+    .catch(error => {
+      console.error('Error loggin in:', error);
+    });
   };
 
+  // Event handler for creating new user account
   const creatingAccount = () => {
-    console.log('Created account');
+    const newUserCredentials = {
+      username: createUsername,
+      password: createPassword
+    };
+  
+    fetch('/account/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newUserCredentials)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Account created successfully');
+        // Additional handling if needed after account creation
+      } else {
+        console.log('Account creation failed');
+      }
+    })
+    .catch(error => {
+      console.error('Error creating account:', error);
+    });
   };
 
   return (

@@ -156,3 +156,33 @@ app.post('/login', function (req, res) {
           res.status(500).json({ success: false, error: 'Internal server error' });
       });
 });
+
+/* Responds to new user creation requests.  */
+app.post('/account/create', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+      return res.status(400).json({ error: 'Both username and password are required' });
+  }
+
+  try {
+      // Check if the username is already taken
+      const existingUser = await User.findOne({ username }).exec();
+
+      if (existingUser) {
+          return res.status(409).json({ error: 'Username is already taken' });
+      }
+
+      // If the username is not taken, create the new user
+      const user = await User.create({ username, password, listings: [], purchases: [] });
+      console.log('NEW USER SUCCESS');
+      console.log();
+      res.status(201).json(user);
+  }
+
+  catch (error) {
+      console.log('Failed user creation.');
+      console.log();
+      res.status(500).json({ error: 'User creation failed' });
+  }
+});
