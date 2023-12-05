@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css';
 import { Board } from './Board.js';
-import { Login } from './LogIn.js';
+import { Login } from './Login.js';
 //import file from './board_storage/SampleBoard.txt';
 //import reportWebVitals from './reportWebVitals';
 
