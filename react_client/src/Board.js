@@ -37,6 +37,14 @@ export class Board extends Component{
    * Reset the game board to all its defaults
    */
   setDefaultState(){
+    let pencils = [];
+    for (let i = 0; i < 9; i++){
+      pencils.push([]);
+      for (let j = 0; j < 9; j++){
+        pencils[i].push([]);
+      }
+    }
+
     this.state = {
       0 :   this.gridData[0].data,
       1 :   this.gridData[1].data,
@@ -47,6 +55,15 @@ export class Board extends Component{
       6 :   this.gridData[6].data,
       7 :   this.gridData[7].data,
       8 :   this.gridData[8].data,
+      pencil0: [[], [], [], [], [], [], [], [], []],
+      pencil1: [[], [], [], [], [], [], [], [], []],
+      pencil2: [[], [], [], [], [], [], [], [], []],
+      pencil3: [[], [], [], [], [], [], [], [], []],
+      pencil4: [[], [], [], [], [], [], [], [], []],
+      pencil5: [[], [], [], [], [], [], [], [], []],
+      pencil6: [[], [], [], [], [], [], [], [], []],
+      pencil7: [[], [], [], [], [], [], [], [], []],
+      pencil8: [[], [], [], [], [], [], [], [], []],
       currentlyCopied : -1,
       errors: 0,
       timer: 0,
@@ -60,8 +77,9 @@ export class Board extends Component{
    * @param {Boolean} isUndo    Boolean repr of whethere this update is an undo operation
    */
   updateBoard(subBoardId, buttonId, isUndo){
+    //console.log(this.state.pencilMode);
     if (this.state.pencilMode){
-
+      this.pencilInBoard(subBoardId, buttonId, this.state.currentlyCopied);
       return;
     }
     this.updateBoardAll(subBoardId, buttonId, this.state.currentlyCopied, isUndo);
@@ -84,17 +102,32 @@ export class Board extends Component{
    * @returns 
    */
   pencilInBoard(subBoardId, buttonId, newValue){
+    //console.log("clicked");
     if (!this.state.pencilMode){
       return;
     }
 
-    if (this.state[subBoardId].data[buttonId] !== " "){
+    /*if (this.state[subBoardId].data[buttonId] !== " "){
+      return;
+    }*/
+
+    if (isNaN(newValue)){
       return;
     }
 
-    //todo
+    let tempCopy = this.state[`pencil${subBoardId}`];
+    if (tempCopy.includes(newValue)){
+      return;
+    }
 
+    tempCopy[buttonId].push(newValue);
+    tempCopy[buttonId].sort();
+    console.log("pencil" + subBoardId);
+    this.setState({
+      [ `pencil${subBoardId}` ]: tempCopy
+    });
   }
+
   /**
    * Update the board at a given location (subBoardId, buttonId) with newValue.  Store the update
    * in the list of moves, unless it is an undo operation.  This allows future undoing.
@@ -105,6 +138,7 @@ export class Board extends Component{
    * @returns 
    */
   updateBoardAll(subBoardId, buttonId, newValue, isUndo){
+    //console.log(this.state.pencilMode);
     if (!this.validatePlacement(subBoardId, buttonId, newValue)){
       return;
     }
@@ -124,7 +158,8 @@ export class Board extends Component{
     // Modify our copy of the values, then set the state with it
     localCopy[buttonId] = newValue.toString();    
     this.setState({
-      [ subBoardId ] : localCopy
+      [ subBoardId ] : localCopy,
+      [`pencil${subBoardId}`] : [[], [], [], [], [], [], [], [], []]
     });
   }
 
@@ -216,10 +251,14 @@ export class Board extends Component{
                 // Generates each 3x3 sub-board, which contains the actual buttons
                 Object.keys(this.state).map(subBoard => {
                   if (!isNaN(subBoard)){
+                    //console.log(this.state);
+                    //console.log(`pencil${subBoard}`)
+                    //console.log(this.state[`pencil${subBoard}`]);
                     return <SubBoard  subBoardData = { this.state[subBoard] } 
                                       parent = { this } 
                                       key = { `SubBoard${subBoard}` }
-                                      id = { subBoard } />
+                                      id = { subBoard }
+                                      pencil = { this.state[`pencil${subBoard}`]} />
                   }
                 })
               }

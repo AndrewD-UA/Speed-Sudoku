@@ -5,21 +5,27 @@ export class SudokuButton extends Component{
     constructor(props){
         super();
         this.isError = false;
+        this.initialValue = props.value;
 
         this.isDefault = false;
-        if (props.value !== " "){
+        if (this.initialValue !== " "){
             this.isDefault = true;
         }
         
         this.state = {
             inError : false,
-            penciled: false
         }
 
         this.id = props.id;              
         this.handleClick = this.handleClick.bind(this);
         this.parentBoard = props.board;
         this.boardLocation = props.id;
+
+        this.pencilHTML = "";
+        this.pencils = [];
+
+        //console.log(`${this.parentBoard.id}${this.boardLocation}` + this.isDefault);
+
     }
 
     handleClick(){
@@ -30,25 +36,40 @@ export class SudokuButton extends Component{
         this.parentBoard.updateBoard(this.id);
     }
 
-    render(){
-        if (this.value = " " && this.props.pencils.length > 0){
-            return  <div className = "pencilButton">
-                        {
-                            this.props.pencils.forEach((pencilMark) => {
-                                return <div>pencilMark</div>
-                            })
-                        }
-                    </div>
+    /**
+     * The intention of this method is to prevent us from re-generating the pencil marks every single time we render a square.
+     * Instead, the pencil marks are statically stored and only updated when a new element is detected.
+     * @returns     A reference to this.pencilHTML, which stores the pencilMarks.
+     */
+    getPencilMarks(){        
+        if (this.pencils.length !== this.props.pencils.length){
+            this.pencils = [...this.props.pencils];
+
+            this.pencilHTML =  this.props.pencils.map((pencilMark) => {
+                return  <div key={`pencil${this.parentBoard.id}${this.boardLocation}${pencilMark}`}>
+                        { pencilMark }
+                        </div>
+            });         
         }
-        return (
-            <input  className= { this.isDefault ? 
-                                    "defaultButton" : this.state.inError ? 
-                                        "errorButton" : "gameButton" } 
-                    type="button" 
-                    value={this.props.value}
-                    onClick={this.handleClick} 
-                    id = {this.boardLocation}>
-            </input>
-        )
+
+        return this.pencilHTML;     
+    }
+
+    render(){
+        return  <div className="buttonSpace">       
+                    <input  className= { this.isDefault ? 
+                        "defaultButton" : this.state.inError ? 
+                            "errorButton" : "gameButton" } 
+                        type="button" 
+                        value={this.props.value}
+                        onClick={this.handleClick} 
+                        id = {this.boardLocation}>
+                    </input> 
+                    <div className = "pencilButtonOverlay">
+                                    {
+                                        this.getPencilMarks()
+                                    }
+                                </div>
+                </div>
     }
 }

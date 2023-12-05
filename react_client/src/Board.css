@@ -65,20 +65,38 @@
  */
 .gameButton{
   height: 100%;
+  width: 100%;
   font-size: 2em;
+  /*background-color: rgb(205, 209, 210);*/
 }
 
-.pencilButton{
+
+.pencilButtonOverlay{
   height: 100%;
+  width: 100%;
   font-size: 0.5em;
+  position: absolute;
+  top: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  pointer-events: none;
+  /*background-color: rgb(205, 209, 210);*/
+
+  color: black;
 }
 
+.buttonSpace{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
 /* This is the styling for game buttons which are added by default and thus cannot be altered.
 */
 .defaultButton{
   height: 100%;
+  width: 100%;
   font-size: 2em;
   background-color: #282c34;
   color: white;
@@ -98,8 +116,6 @@
   margin-bottom: 1%;
   margin-left: 7%;
   margin-right: 10%;
-
-  border-radius: 100px;
 }
 
 /* This styling is applied to everything to the left of the board.  #BoardLeft is the parent div

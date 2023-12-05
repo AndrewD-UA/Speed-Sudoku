@@ -30,11 +30,12 @@ export class SubBoard extends Component{
             <div className="gridSquare" key={`gridSquare${this.id}`}>
               {
                 Object.keys(this.state).map((buttonId) => {
-                    return <SudokuButton    id={`${buttonId}`} 
+                    return (<SudokuButton   id={`${buttonId}`} 
                                             value = {this.props.subBoardData[buttonId]} 
                                             key = {`button${buttonId}`} 
                                             board = {this}
-                                            pencils = {[]}/>
+                                            pencils = {this.props.pencil[buttonId]}/>
+                            )
                 })
               }
             </div>
