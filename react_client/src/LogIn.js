@@ -1,10 +1,6 @@
-// Import React and any other necessary modules
 import React, { useState } from 'react';
-//import './style.css'; // Assuming you have a style.css file
 
-// Define the React component
 export const Login = () => {
-  // State for login and create account forms
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [createUsername, setCreateUsername] = useState('');
@@ -12,13 +8,14 @@ export const Login = () => {
 
   // Event handler for login button
   const loggingIn = () => {
-    // Add your login logic here
+    // connect to user/pass database
+    if (loginUsername === "admin" && loginPassword === "admin") {
+      window.location.href = "/play";
+    }
     console.log('Logged in');
   };
 
-  // Event handler for create account button
   const creatingAccount = () => {
-    // Add your create account logic here
     console.log('Created account');
   };
 
@@ -44,7 +41,7 @@ export const Login = () => {
         <div>
           <label htmlFor="password">Password</label>
           <input
-            type="password" // Change to password input type
+            type="password"
             id="password"
             name="password"
             value={loginPassword}
@@ -70,7 +67,7 @@ export const Login = () => {
         <div>
           <label htmlFor="createPassword">Password</label>
           <input
-            type="password" // Change to password input type
+            type="password"
             id="createPassword"
             name="createPassword"
             value={createPassword}
