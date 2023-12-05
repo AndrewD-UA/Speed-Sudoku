@@ -19,12 +19,6 @@ export class InputButton extends Component{
         });
     }
 
-    setUsageMode(boolState){
-        this.setState({
-            currentlySelected: boolState
-        });
-    }
-
     handleClick(){
         this.parentBoard.storeInputValue(this.inputValue);
         this.toggleUsageMode();
@@ -32,8 +26,12 @@ export class InputButton extends Component{
 
     render(){
         return (
-            <input  className= {this.state.currentlySelected ? "toggledInputButton" : "inputButton"}
-                    type="button" value={this.inputValue} onClick={this.handleClick}></input>
+            <input  className= {this.state.currentlySelected && 
+                                this.parentBoard.state.currentlyCopied === this.inputValue ? 
+                                    "toggledInputButton" : "inputButton"}
+                    type="button" 
+                    value={this.inputValue} 
+                    onClick={this.handleClick}></input>
         )
     }
 }

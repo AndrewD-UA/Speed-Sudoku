@@ -1,5 +1,5 @@
 /* By: Andrew Dennison and [ADD NAME IF MODIFIED]
- * Last modified: 17 NOV 23
+ * Last modified: 04 DEC 23
 */
 
 import './Board.css';
@@ -29,22 +29,43 @@ export class Board extends Component{
         5 :   this.gridData[5].data,
         6 :   this.gridData[6].data,
         7 :   this.gridData[7].data,
-        8 :   this.gridData[8].data
+        8 :   this.gridData[8].data,
+        currentlyCopied : -1
     }
 
     this.currentlyCopied = -1;
   }
+
+  /**
+   * Shell function to inform the board to update with the currently copied value
+   * @param {Number} subBoardId Number repr of which subBoard is being updated [0-8]
+   * @param {Number} buttonId   Number repr of which button in the subBoard is being updated [0-8]
+   * @param {Boolean} isUndo    Boolean repr of whethere this update is an undo operation
+   */
   updateBoard(subBoardId, buttonId, isUndo){
     this.updateBoardAll(subBoardId, buttonId, this.currentlyCopied, isUndo);
   }
 
+  /**
+   * Update the board at a given location (subBoardId, buttonId) with newValue.  Store the update
+   * in the list of moves, unless it is an undo operation.  This allows future undoing.
+   * @param {*} subBoardId  Number repr of which subBoard is being updated [0-8]
+   * @param {*} buttonId    Number repr of which button in the subBoard is being updated [0-8]
+   * @param {*} newValue    Value to store at the given location
+   * @param {*} isUndo      Boolean repr of whethere this update is an undo operation
+   * @returns 
+   */
   updateBoardAll(subBoardId, buttonId, newValue, isUndo){
+    // If the new value is less than 1, no input button is currently selected
+    // Unless newValue is " ", which indicates it is the erase functionality
     if (newValue < 1 && newValue != " "){
       return;
     }
 
+    // Make a copy of the current array of values
     let localCopy = [...this.state[subBoardId]]
 
+    // If it's not an undo operation, store our set of moves for future undo operations
     if (!isUndo){
       this.moves.push({
         subBoard: subBoardId,
@@ -53,23 +74,33 @@ export class Board extends Component{
       });
     }
 
+    // Modify our copy of the values, then set the state with it
     localCopy[buttonId] = newValue.toString();    
     this.setState({
-      [subBoardId ] : localCopy
+      [ subBoardId ] : localCopy
+    });
+  }
+
+  /**
+   * Update the currentlyCopied state to the selection, represented by value
+   * @param {*} value Value can either be a Number, or " ", which indicates erasing
+   */
+  storeInputValue(value){
+    this.setState({
+      currentlyCopied : value
     })
   }
 
-  storeInputValue(value){
-    this.currentlyCopied = value;
-  }
-
+  /**
+   * Calling Undo access this.moves to undo the last recorded move.  This could be a deletion/erase
+   * or an insertion of a new number.
+   */
   undo(){
     if (this.moves.length === 0){
       return;
     }
 
     let lastMove = this.moves.pop();
-    console.log(lastMove);
     this.updateBoardAll(lastMove.subBoard, lastMove.button, lastMove.oldValue, true)
   }
 
@@ -142,19 +173,6 @@ export class Board extends Component{
   // Currently, this acts as a nested for loop to generate a gridSquare div that contains all 9 buttons inside
   render(){
     return (
-      // The entire application is wrapped in a div and header.  Below the header:
-
-      // There are four distinct divs organized vertically throughout the App.
-      //     <Title>
-      //     <Board>
-      //     <Inputs>
-      //     <Options>
-      // Board contains the current representation of the board.
-      // Inputs represents which number you are currently trying to emplace.  The idea is when you click
-      // on an input, that number is retained and then deposited into the next square you click in the board.
-      // Options contains the erase and hint functionality, as well as pencil
-      // Pencil is intended to be used to emplace a mark on the sudoku board without it counting
-      // Multiple numbers can be pencilled in the same square.
       <div className="App">
         <AppHeader />
         <div className="App-body">
@@ -175,8 +193,7 @@ export class Board extends Component{
                 })
               }
             </div>
-          </div>
-          
+          </div>          
 
           <div id="Inputs">
             {
@@ -184,7 +201,7 @@ export class Board extends Component{
               // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
               // This just avoids having to generate a new sequence of 1-9.
               this.gridData.map((gridSquare) => {
-                return <InputButton input={gridSquare.id} key={`InputButton${gridSquare.id}`} board={this}/>
+                return <InputButton input={gridSquare.id + 1} key={`InputButton${gridSquare.id + 1}`} board={this}/>
               })
             }
           </div>
@@ -202,6 +219,11 @@ export class Board extends Component{
   }
 }
 
+/**
+ * React component for the Undo button.  This button did not need its own class.
+ * @param {*} props   Props expects props.board to exist, which is the parent board
+ * @returns           Typescript formatting of the undo button
+ */
 function UndoButton(props){
   const [pressed, setPressed] = useState(false);
 
@@ -225,6 +247,10 @@ function UndoButton(props){
                 onMouseOut = {handleMouseOut}/>
 }
 
+/**
+ * Header containing the speed sudoku header at the top of the application, used on every page.
+ * @returns   Typescript formatting of the Header
+ */
 export function AppHeader(){
   return (
     <header className="App-header">
