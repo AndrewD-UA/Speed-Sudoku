@@ -131,6 +131,7 @@
 #BoardLeft{
   width: 15vw;
   margin-left: 2vw;
+  margin-right: 1vw;
   font-size: 75%;
 
   display: flex;
@@ -141,8 +142,8 @@
 /* This styling is applied to everything to the right of the board.  #BoardRight is the parent div
 */
 #BoardRight{
-  margin-right: 2vw;
-  margin-left: 2vw;
+  margin-right: 5vw;
+  margin-left: 5vw;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -227,4 +228,22 @@
   font-size: 2em;
   background-color: rgb(103, 104, 105);
   border-radius: 10px;
+}
+
+.loseBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lossOptions{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.lossButton{
+  height: 8vh;
+  font-size: 2em;
+  border: 0.1em outset black;
 }

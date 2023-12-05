@@ -12,40 +12,14 @@ import React, { Component, useState } from 'react';
 export class Board extends Component{
 
   constructor(props){
-    super();
+    super(props);
 
     this.gridData = props.data;
     this.solution = props.solution;
-    this.initialData = props.data;
 
     this.moves = [];
-    this.lastMove = "No last move";
 
-    this.setDefaultState();
-
-    setInterval(() =>{
-      this.setState({
-        timer: this.state.timer + 1
-      })
-    }, 1000)
-
-    this.currentlyCopied = -1;
-  }
-
-  /**
-   * Called when the game is lost, or during intialization
-   * Reset the game board to all its defaults
-   */
-  setDefaultState(){
-    let pencils = [];
-    for (let i = 0; i < 9; i++){
-      pencils.push([]);
-      for (let j = 0; j < 9; j++){
-        pencils[i].push([]);
-      }
-    }
-
-    this.state = {
+    this.initialState = {
       0 :   this.gridData[0].data,
       1 :   this.gridData[1].data,
       2 :   this.gridData[2].data,
@@ -67,9 +41,30 @@ export class Board extends Component{
       currentlyCopied : -1,
       errors: 0,
       timer: 0,
-      pencilMode: false
+      pencilMode: false,
+      win: false
     }
+
+    this.state = this.initialState;
+
+    setInterval(() =>{
+      if (this.state.errors < 3 && !this.state.win){
+        this.setState({
+          timer: this.state.timer + 1
+        })
+      }
+    }, 1000)
+
+    this.currentlyCopied = -1;
   }
+  /**
+   * Called when the game is lost, or during intialization
+   * Reset the game board to all its defaults
+   */
+  setDefaultState(){
+    this.setState(this.initialState);
+  }
+
   /**
    * Shell function to inform the board to update with the currently copied value
    * @param {Number} subBoardId Number repr of which subBoard is being updated [0-8]
@@ -78,8 +73,7 @@ export class Board extends Component{
    */
   updateBoard(subBoardId, buttonId, isUndo){
     if (this.state.pencilMode){
-      this.pencilInBoard(subBoardId, buttonId, this.state.currentlyCopied);
-      return;
+      return this.pencilInBoard(subBoardId, buttonId, this.state.currentlyCopied);
     }
     return this.updateBoardAll(subBoardId, buttonId, this.state.currentlyCopied, isUndo);
   }
@@ -144,7 +138,7 @@ export class Board extends Component{
     }
 
     // Make a copy of the current array of values
-    let localCopy = [...this.state[subBoardId]]
+    let localCopy = JSON.parse(JSON.stringify(this.state[subBoardId]));
 
     // If it's not an undo operation, store our set of moves for future undo operations
     if (!isUndo){
@@ -219,6 +213,51 @@ export class Board extends Component{
     this.updateBoardAll(lastMove.subBoard, lastMove.button, lastMove.oldValue, true)
   }
 
+  renderBoard() {
+    if (this.state.win){
+      return (
+        <div className="loseBox">
+          <h2>You won after { ~~(this.state.timer / 60) } minutes 
+            and { this.state.timer % 60 } seconds!</h2>
+          <MainMenu />
+        </div>
+      )
+    } 
+    
+    else if (this.state.errors >= 3){
+      return (
+        <div className="loseBox">
+          <h2>You lost after just { ~~(this.state.timer / 60) } minutes 
+          and { this.state.timer % 60 } seconds!</h2>
+          <div className="lossOptions">
+            <MainMenu />
+            <input  value="Reset Board"
+                    type="button"
+                    className="lossButton"
+                    onClick={this.setDefaultState.bind(this)}/>
+
+          </div>
+        </div>
+      )
+    }
+
+    return (  
+      <div id="Board">
+        {
+          // Generates each 3x3 sub-board, which contains the actual buttons
+          Object.keys(this.state).map(subBoard => {
+            if (!isNaN(subBoard)){
+              return <SubBoard  subBoardData = { this.state[subBoard] } 
+                                parent = { this } 
+                                key = { `SubBoard${subBoard}` }
+                                id = { subBoard }
+                                pencil = { this.state[`pencil${subBoard}`]} />
+              }
+          })
+        }
+      </div>
+    )
+  }
   // This function returns a Board object, built using the gridData 2D array to be used as <Board />
 
   render(){
@@ -227,42 +266,11 @@ export class Board extends Component{
         <AppHeader />
         <div className="App-body">
           <div className="PrimaryDisplay">
-          <div id="BoardLeft">
-            <h2>Instructions</h2>
-            <div>
-              Each square, row, and column have exactly one arrangement of the numbers 1-9.  Duplicate numbers are not
-              allowed within the same square, row, or column.
-            </div>
-            <div>
-              Squares which are filled in by default cannot be changed and are marked with a dark blue color.
-            </div>
-            <div>
-              To input a number, select the appropriate input button below the board.  Then, click on the square you'd like to input it in.
-            </div>
-            <div>
-              Incorrect entries will count against you.  Getting 3 errors will reset the board.
-            </div>
-          </div>
-            <div id="Board">
-              {
-                // Generates each 3x3 sub-board, which contains the actual buttons
-                Object.keys(this.state).map(subBoard => {
-                  if (!isNaN(subBoard)){
-                    //console.log(this.state);
-                    //console.log(`pencil${subBoard}`)
-                    //console.log(this.state[`pencil${subBoard}`]);
-                    return <SubBoard  subBoardData = { this.state[subBoard] } 
-                                      parent = { this } 
-                                      key = { `SubBoard${subBoard}` }
-                                      id = { subBoard }
-                                      pencil = { this.state[`pencil${subBoard}`]} />
-                  }
-                })
-              }
-            </div>
-            <div id="BoardRight">
-              <ErrorTimer errors={ this.state.errors } timer={ this.state.timer}/>
-            </div>
+          <Instructions />
+          {
+            this.renderBoard()
+          }
+          <ErrorTimer errors={ this.state.errors } timer={ this.state.timer }/>
           </div>          
 
           <div id="Inputs">
@@ -345,4 +353,33 @@ function ErrorTimer(props){
       </div>
     </div>
   );
+}
+
+function Instructions(){
+  return (
+    <div id="BoardLeft">
+      <h2>Instructions</h2>
+      <div>
+         Each square, row, and column have exactly one arrangement of the numbers 1-9.  Duplicate numbers are not
+         allowed within the same square, row, or column.
+      </div>
+      <div>
+        Squares which are filled in by default cannot be changed and are marked with a dark blue color.
+      </div>
+      <div>
+        To input a number, select the appropriate input button below the board.  Then, click on the square you'd like to input it in.
+      </div>
+      <div>
+        Incorrect entries will count against you.  Getting 3 errors will reset the board.
+      </div>
+    </div>
+  )
+}
+
+function MainMenu(props){
+  return (
+    <input  value="Main Menu"
+                    type="button"
+                    className="lossButton"/>
+  )
 }
