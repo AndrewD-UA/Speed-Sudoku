@@ -11,41 +11,41 @@ app.use(express.static("build"));
 
 //mongodb setup
 try {
-    mongoose.connect(mongoUrl, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  } catch (err) {
-    console.error(err.message);
-    process.exit(1);
+  mongoose.connect(mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+} catch (err) {
+  console.error(err.message);
+  process.exit(1);
 }
 const dbConnection = mongoose.connection;
 dbConnection.once("open", (_) => {
-    console.log(`Database connected: ${mongoUrl}`);
+  console.log(`Database connected: ${mongoUrl}`);
 });
 dbConnection.on("error", (err) => {
-    console.error(`connection error: ${err}`);
+  console.error(`connection error: ${err}`);
 });
 
 // mongo schemas
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-    username: String,
-    password: String,
-    friends: [{ type: Schema.Types.ObjectId }],
+  username: String,
+  password: String,
+  friends: [{ type: Schema.Types.ObjectId }],
 });
 var User = mongoose.model('User', userSchema);
 
 // change to fit how to hold the puzzle
 var puzzleSchema = new Schema({
-    puzzle: [{ type: Schema.Types.ObjectId }],
+  puzzle: [{ type: Schema.Types.ObjectId }],
 });
 var Puzzle = mongoose.model('Puzzle', puzzleSchema);
 
 var competitiveSchema = new Schema({
-    wins: Number,
-    timestamp: String,
+  wins: Number,
+  timestamp: String,
 });
 var Competitive = mongoose.model('Competitive', puzzleSchema);
 
@@ -55,10 +55,10 @@ let sessions = {};
 
 /* Addes a new user session */
 function addSession(username) {
-  let now = Date.now();  
-  let sessID  = Math.floor(Math.random() * 1000000000);
-    sessions[username] = {id: sessID, time: now};
-    return sessID;
+  let now = Date.now();
+  let sessID = Math.floor(Math.random() * 1000000000);
+  sessions[username] = { id: sessID, time: now };
+  return sessID;
 }
 
 /* Removes inactive cookie sessions */
@@ -92,19 +92,19 @@ function authenticate(req, res, next) {
   console.log('auth request:');
   console.log(req.cookies);
   if (c != undefined) {
-    if (sessions[c.login.username] != undefined && 
+    if (sessions[c.login.username] != undefined &&
       sessions[c.login.username].id == c.login.sessionID) {
       next();
     } else {
       res.redirect('/index.html');
     }
-  }  else {
+  } else {
     res.redirect('/index.html');
   }
 }
 
 app.use('/app/*', authenticate);
-app.get('/app/*', (req, res, next) => { 
+app.get('/app/*', (req, res, next) => {
   console.log('another');
   next();
 });
@@ -112,13 +112,13 @@ app.get('/app/*', (req, res, next) => {
 // Get users
 app.get('/get/users', (req, res) => {
   User.find()
-      .then(users => {
-          res.json(users);
-      })
-      .catch(err => {
-          console.error('Error:', err);
-          res.status(500).json({ error: 'Failed' });
-      });
+    .then(users => {
+      res.json(users);
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      res.status(500).json({ error: 'Failed' });
+    });
 });
 
 // Add user Post
@@ -126,13 +126,13 @@ app.post('/add/user', (req, res) => {
   var { username, password } = req.body;
   var newUser = new User({ username, password });
   newUser.save()
-      .then(userSaved => {
-          res.json(userSaved);
-      })
-      .catch(err => {
-          console.error('Error:', err);
-          res.status(500).json({ error: 'Failed' });
-      });
+    .then(userSaved => {
+      res.json(userSaved);
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      res.status(500).json({ error: 'Failed' });
+    });
 });
 
 // Login to account
@@ -140,19 +140,49 @@ app.post('/login', function (req, res) {
   console.log(sessions);
   let u = req.body;
   User.findOne({ username: u.username, password: u.password })
-      .then(user => {
-          if (user) {
-              let sid = addSession(u.username);  
-              res.cookie("login", 
-                  {username: u.username, sessionID: sid}, 
-                  {maxAge: 60000 * 2 });
-              res.json({ success: true });        
-          } else {
-              res.json({ success: false });
-          }
-      })
-      .catch(err => {
-          console.error(err);
-          res.status(500).json({ success: false, error: 'Internal server error' });
-      });
+    .then(user => {
+      if (user) {
+        let sid = addSession(u.username);
+        res.cookie("login",
+          { username: u.username, sessionID: sid },
+          { maxAge: 60000 * 2 });
+        res.json({ success: true });
+      } else {
+        res.json({ success: false });
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
+    });
+});
+
+/* Responds to new user creation requests.  */
+app.post('/account/create', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Both username and password are required' });
+  }
+
+  try {
+    // Check if the username is already taken
+    const existingUser = await User.findOne({ username }).exec();
+
+    if (existingUser) {
+      return res.status(409).json({ error: 'Username is already taken' });
+    }
+
+    // If the username is not taken, create the new user
+    const user = await User.create({ username, password, listings: [], purchases: [] });
+    console.log('NEW USER SUCCESS');
+    console.log();
+    res.status(201).json(user);
+  }
+
+  catch (error) {
+    console.log('Failed user creation.');
+    console.log();
+    res.status(500).json({ error: 'User creation failed' });
+  }
 });
