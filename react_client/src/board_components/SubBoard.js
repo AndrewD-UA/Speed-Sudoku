@@ -22,7 +22,7 @@ export class SubBoard extends Component{
     }
 
     updateBoard(buttonId){
-        this.parentBoard.updateBoard(this.id, buttonId, false);
+        return this.parentBoard.updateBoard(this.id, buttonId, false);
     }
 
     render(){

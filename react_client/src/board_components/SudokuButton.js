@@ -19,17 +19,21 @@ export class SudokuButton extends Component{
         this.parentBoard = props.board;
         this.boardLocation = props.id;
 
-        this.pencilHTML = "";
-        this.pencils = [];
-
-        //console.log(`${this.parentBoard.id}${this.boardLocation}` + this.isDefault);
+        this.pencilHTML = ""; // Contains all divs to be rendered inside pencilButtonOverlay
+        this.pencilsLength = 0; // How many pencil marks the SudokuButton is aware it has
 
     }
 
     setErrored(){
         this.setState({
-            inError: true
+            inError: true,
         });
+
+        setTimeout(() => {
+            this.setState({
+                inError: false
+            })
+        }, 3000)
     }
     /**
      * If this is not a default square, send the update request up to the board.
@@ -40,7 +44,13 @@ export class SudokuButton extends Component{
             return;
         }
 
-        this.parentBoard.updateBoard(this.id);
+        if (this.parentBoard.updateBoard(this.id) === false){
+            this.setErrored();
+        } else if (this.state.inError){
+            this.setState({
+                inError: false
+            })
+        }
     }
 
     /**
@@ -49,7 +59,7 @@ export class SudokuButton extends Component{
      * @returns     A reference to this.pencilHTML, which stores the pencilMarks.
      */
     getPencilMarks(){   
-        if (this.pencils.length !== this.props.pencils.length){
+        if (this.pencilsLength !== this.props.pencils.length){
             this.pencils = [...this.props.pencils];
 
             this.pencilHTML =  this.props.pencils.map((pencilMark) => {

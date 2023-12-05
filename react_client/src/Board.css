@@ -70,6 +70,13 @@
   /*background-color: rgb(205, 209, 210);*/
 }
 
+.errorButton{
+  height: 100%;
+  width: 100%;
+  font-size: 2em;
+  background-color: red;
+}
+
 
 .pencilButtonOverlay{
   height: 100%;
@@ -92,6 +99,7 @@
   height: 100%;
   position: relative;
 }
+
 /* This is the styling for game buttons which are added by default and thus cannot be altered.
 */
 .defaultButton{

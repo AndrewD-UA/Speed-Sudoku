@@ -81,7 +81,7 @@ export class Board extends Component{
       this.pencilInBoard(subBoardId, buttonId, this.state.currentlyCopied);
       return;
     }
-    this.updateBoardAll(subBoardId, buttonId, this.state.currentlyCopied, isUndo);
+    return this.updateBoardAll(subBoardId, buttonId, this.state.currentlyCopied, isUndo);
   }
 
   /**
@@ -120,7 +120,6 @@ export class Board extends Component{
 
     tempCopy[buttonId].push(newValue);
     tempCopy[buttonId].sort();
-    console.log("pencil" + subBoardId);
     this.setState({
       [ `pencil${subBoardId}` ]: tempCopy
     });
@@ -136,8 +135,12 @@ export class Board extends Component{
    * @returns 
    */
   updateBoardAll(subBoardId, buttonId, newValue, isUndo){
-    if (!this.validatePlacement(subBoardId, buttonId, newValue)){
+    if (newValue < 1 && newValue != " "){
       return;
+    }
+
+    if (!this.validatePlacement(subBoardId, buttonId, newValue)){
+      return false;
     }
 
     // Make a copy of the current array of values
@@ -169,10 +172,6 @@ export class Board extends Component{
    * @returns                   Boolean repr of whether this is a valid entry
    */
   validatePlacement(subBoardId, buttonId, newValue){
-    if (newValue < 1 && newValue != " "){
-      return false;
-    }
-
     if (newValue == " "){
       return true;
     }
@@ -184,6 +183,7 @@ export class Board extends Component{
     this.setState({
       errors : this.state.errors + 1
     });
+    
     return false;
   }
 
