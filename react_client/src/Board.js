@@ -15,6 +15,7 @@ export class Board extends Component{
     super();
 
     this.gridData = props.data;
+    this.solution = props.solution;
     this.initialData = props.data;
 
     this.moves = [];
@@ -50,7 +51,7 @@ export class Board extends Component{
    * @param {Boolean} isUndo    Boolean repr of whethere this update is an undo operation
    */
   updateBoard(subBoardId, buttonId, isUndo){
-    this.updateBoardAll(subBoardId, buttonId, this.currentlyCopied, isUndo);
+    this.updateBoardAll(subBoardId, buttonId, this.state.currentlyCopied, isUndo);
   }
 
   /**
@@ -192,6 +193,12 @@ export class Board extends Component{
             </div>
             <div>
               Squares which are filled in by default cannot be changed and are marked with a dark blue color.
+            </div>
+            <div>
+              To input a number, select the appropriate input button below the board.  Then, click on the square you'd like to input it in.
+            </div>
+            <div>
+              Incorrect entries will count against you.  Getting 3 errors will reset the board.
             </div>
           </div>
             <div id="Board">
