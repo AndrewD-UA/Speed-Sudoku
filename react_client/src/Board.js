@@ -30,12 +30,19 @@ export class Board extends Component{
         6 :   this.gridData[6].data,
         7 :   this.gridData[7].data,
         8 :   this.gridData[8].data,
-        currentlyCopied : -1
+        currentlyCopied : -1,
+        errors: 0,
+        timer: 0
     }
+
+    setInterval(() =>{
+      this.setState({
+        timer: this.state.timer + 1
+      })
+    }, 1000)
 
     this.currentlyCopied = -1;
   }
-
   /**
    * Shell function to inform the board to update with the currently copied value
    * @param {Number} subBoardId Number repr of which subBoard is being updated [0-8]
@@ -177,9 +184,16 @@ export class Board extends Component{
         <AppHeader />
         <div className="App-body">
           <div className="PrimaryDisplay">
-            <div id="BoardSide">
-
+          <div id="BoardLeft">
+            <h2>Instructions</h2>
+            <div>
+              Each square, row, and column have exactly one arrangement of the numbers 1-9.  Duplicate numbers are not
+              allowed within the same square, row, or column.
             </div>
+            <div>
+              Squares which are filled in by default cannot be changed and are marked with a dark blue color.
+            </div>
+          </div>
             <div id="Board">
               {
                 // Generates each 3x3 sub-board, which contains the actual buttons
@@ -192,6 +206,9 @@ export class Board extends Component{
                   }
                 })
               }
+            </div>
+            <div id="BoardRight">
+              <ErrorTimer errors={ this.state.errors } timer={ this.state.timer}/>
             </div>
           </div>          
 
@@ -258,4 +275,23 @@ export function AppHeader(){
       <h2 className="subTitle">A competitive Sudoku website!</h2>    
     </header>
   )
+}
+
+function ErrorTimer(props){
+  let minutes = ~~(props.timer / 60);
+  let seconds = props.timer - (minutes * 60);
+
+  return (
+    <div id="BoardRight">
+      <div>
+        <h2>Timer</h2>
+        <div> {minutes} : {seconds}</div>
+      </div>
+
+      <div>
+        <h2>Errors</h2>
+        <div> { props.errors } / 3</div>
+      </div>
+    </div>
+  );
 }
