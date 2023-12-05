@@ -33,7 +33,8 @@ export class SubBoard extends Component{
                     return <SudokuButton    id={`${buttonId}`} 
                                             value = {this.props.subBoardData[buttonId]} 
                                             key = {`button${buttonId}`} 
-                                            board = {this}/>
+                                            board = {this}
+                                            pencils = {[]}/>
                 })
               }
             </div>

@@ -12,8 +12,10 @@ export class SudokuButton extends Component{
         }
         
         this.state = {
-            inError : false
+            inError : false,
+            penciled: false
         }
+
         this.id = props.id;              
         this.handleClick = this.handleClick.bind(this);
         this.parentBoard = props.board;
@@ -29,6 +31,15 @@ export class SudokuButton extends Component{
     }
 
     render(){
+        if (this.value = " " && this.props.pencils.length > 0){
+            return  <div className = "pencilButton">
+                        {
+                            this.props.pencils.forEach((pencilMark) => {
+                                return <div>pencilMark</div>
+                            })
+                        }
+                    </div>
+        }
         return (
             <input  className= { this.isDefault ? 
                                     "defaultButton" : this.state.inError ? 

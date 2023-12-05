@@ -68,6 +68,13 @@
   font-size: 2em;
 }
 
+.pencilButton{
+  height: 100%;
+  font-size: 0.5em;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
 /* This is the styling for game buttons which are added by default and thus cannot be altered.
 */
 .defaultButton{

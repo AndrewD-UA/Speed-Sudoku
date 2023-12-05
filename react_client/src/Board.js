@@ -21,20 +21,7 @@ export class Board extends Component{
     this.moves = [];
     this.lastMove = "No last move";
 
-    this.state = {
-        0 :   this.gridData[0].data,
-        1 :   this.gridData[1].data,
-        2 :   this.gridData[2].data,
-        3 :   this.gridData[3].data,
-        4 :   this.gridData[4].data,
-        5 :   this.gridData[5].data,
-        6 :   this.gridData[6].data,
-        7 :   this.gridData[7].data,
-        8 :   this.gridData[8].data,
-        currentlyCopied : -1,
-        errors: 0,
-        timer: 0
-    }
+    this.setDefaultState();
 
     setInterval(() =>{
       this.setState({
@@ -44,6 +31,28 @@ export class Board extends Component{
 
     this.currentlyCopied = -1;
   }
+
+  /**
+   * Called when the game is lost, or during intialization
+   * Reset the game board to all its defaults
+   */
+  setDefaultState(){
+    this.state = {
+      0 :   this.gridData[0].data,
+      1 :   this.gridData[1].data,
+      2 :   this.gridData[2].data,
+      3 :   this.gridData[3].data,
+      4 :   this.gridData[4].data,
+      5 :   this.gridData[5].data,
+      6 :   this.gridData[6].data,
+      7 :   this.gridData[7].data,
+      8 :   this.gridData[8].data,
+      currentlyCopied : -1,
+      errors: 0,
+      timer: 0,
+      pencilMode: false
+    }
+  }
   /**
    * Shell function to inform the board to update with the currently copied value
    * @param {Number} subBoardId Number repr of which subBoard is being updated [0-8]
@@ -51,9 +60,41 @@ export class Board extends Component{
    * @param {Boolean} isUndo    Boolean repr of whethere this update is an undo operation
    */
   updateBoard(subBoardId, buttonId, isUndo){
+    if (this.state.pencilMode){
+
+      return;
+    }
     this.updateBoardAll(subBoardId, buttonId, this.state.currentlyCopied, isUndo);
   }
 
+  /**
+   * Toggle whether the board is in pencil mode and marks are not counted against erros
+   */
+  togglePencilMode(){
+    this.setState({
+      pencilMode: !this.state.pencilMode
+    });
+  }
+
+  /**
+   * [WIP] Apply the action of penciling in a value
+   * @param {*} subBoardId 
+   * @param {*} buttonId 
+   * @param {*} newValue 
+   * @returns 
+   */
+  pencilInBoard(subBoardId, buttonId, newValue){
+    if (!this.state.pencilMode){
+      return;
+    }
+
+    if (this.state[subBoardId].data[buttonId] !== " "){
+      return;
+    }
+
+    //todo
+
+  }
   /**
    * Update the board at a given location (subBoardId, buttonId) with newValue.  Store the update
    * in the list of moves, unless it is an undo operation.  This allows future undoing.
@@ -64,16 +105,10 @@ export class Board extends Component{
    * @returns 
    */
   updateBoardAll(subBoardId, buttonId, newValue, isUndo){
-    // If the new value is less than 1, no input button is currently selected
-    // Unless newValue is " ", which indicates it is the erase functionality
-    if (newValue < 1 && newValue != " "){
-      return;
-    }
-
     if (!this.validatePlacement(subBoardId, buttonId, newValue)){
       return;
     }
-    
+
     // Make a copy of the current array of values
     let localCopy = [...this.state[subBoardId]]
 
@@ -102,6 +137,10 @@ export class Board extends Component{
    * @returns                   Boolean repr of whether this is a valid entry
    */
   validatePlacement(subBoardId, buttonId, newValue){
+    if (newValue < 1 && newValue != " "){
+      return false;
+    }
+
     if (newValue == " "){
       return true;
     }
@@ -118,9 +157,18 @@ export class Board extends Component{
 
   /**
    * Update the currentlyCopied state to the selection, represented by value
+   * If currentlyCopied is already set to value, set to -1.  This simulates "unclicking" a button.
+   * Furthermore, a value of -1 is ignored 
    * @param {*} value Value can either be a Number, or " ", which indicates erasing
    */
   storeInputValue(value){
+    if (this.state.currentlyCopied === value){
+      this.setState({
+        currentlyCopied : -1
+      })
+      return;
+    }
+
     this.setState({
       currentlyCopied : value
     })
@@ -196,9 +244,7 @@ export class Board extends Component{
             <PencilButton board={this}/>
             <EraseButton board={this}/>
             <UndoButton board={this}/>
-            <input className="optionButton" type="button" value="Hint"/>
           </div>
-
         </div>
       </div>
     );
