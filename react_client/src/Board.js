@@ -45,7 +45,7 @@ export class Board extends Component{
       win: false
     }
 
-    this.state = this.initialState;
+    this.state = JSON.parse(JSON.stringify((this.initialState)));
 
     setInterval(() =>{
       if (this.state.errors < 3 && !this.state.win){
@@ -215,6 +215,7 @@ export class Board extends Component{
   }
 
   renderBoard() {
+    console.log("Board being rendered");
     if (this.state.win){
       return (
         <div className="loseBox">
