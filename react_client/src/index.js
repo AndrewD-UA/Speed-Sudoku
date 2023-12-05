@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 let practiceData = "   4   6 \n5 4 3    \n7     1  \n  6 4 217\n         \n   5 24  \n  9  8   \n 2  1  56\n  63 7  1";
 let practiceSudoku = processData(practiceData);
 
-let solutionData = "1  4   6 \n5 4 3    \n7     1  \n  6 4 217\n         \n   5 24  \n  9  8   \n 2  1  56\n  63 7  1"
+let solutionData = "831492765\n564137982\n729685134\n586943217\n241678395\n973512468\n159628374\n723419856\n846357291"
 let practiceSolution = processData(solutionData);
 
 function processData(inputData){
