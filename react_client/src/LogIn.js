@@ -21,15 +21,18 @@ export const Login = () => {
       password: loginPassword
     };
 
-    fetch('localhost:3000/login', {
+    console.log(userCredentials);
+
+    fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'applications/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(userCredentials)
     })
       .then(response => {
-        if (response.ok) {
+        console.log(response);
+        if (response.status === 200) {
           window.location.href = "/play";
         } else {
           console.log('Login failed');

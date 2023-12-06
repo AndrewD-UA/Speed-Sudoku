@@ -4,10 +4,12 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 const bp = require('body-parser');
+const cors = require('cors');
+const crypto = require('crypto');
+
 const hostname = '127.0.0.1';
 const port = 3000;
 const mongoUrl = 'mongodb://127.0.0.1:27017/Speed-Sudoku';
-const cors = require('cors');
 
 app.listen(port, hostname, () => console.log(`Server running on http://${hostname}:${port}`));
 app.use(cors({
@@ -39,7 +41,8 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
   username: String,
-  password: String,
+  hash: String,
+  salt: String,
   friends: [{ type: Schema.Types.ObjectId }],
 });
 var User = mongoose.model('User', userSchema);
@@ -210,17 +213,29 @@ app.get('/get/users', (req, res) => {
 
 // Login to account
 app.post('/login', function (req, res) {
-  console.log(sessions);
-  let u = req.body;
-  User.findOne({ username: u.username, password: u.password })
+  const { username, password } = req.body;
+
+  User.findOne({ username: username })
     .then(user => {
-      if (user) {
-        let sid = addSession(u.username);
+      if (user) {        
+        let toHash = password + user.salt;
+        let h = crypto.createHash('sha3-256');
+        let data = h.update(toHash, 'utf-8');
+        let result = data.digest('hex');
+        
+        if (result !== user.hash){
+          console.log("Incorrect password");
+          return;
+        }
+
+        console.log("Successful authentication");
+        let sid = addSession(username);
         res.cookie("login",
-          { username: u.username, sessionID: sid },
+          { username: username, sessionID: sid },
           { maxAge: 60000000000 * 2 });
         res.json({ success: true });
       } else {
+        console.log("no user found");
         res.json({ success: false });
       }
     })
@@ -246,8 +261,23 @@ app.post('/account/create', async (req, res) => {
       return res.status(409).json({ error: 'Username is already taken' });
     }
 
+    // The assumption now is the user can validly be added
+
+    // Salt and Hash password
+    let newSalt = '' + Math.floor(Math.random() * 10000000000);
+    let toHash = password + newSalt;
+    let h = crypto.createHash('sha3-256');
+    let data = h.update(toHash, 'utf-8');
+    let result = data.digest('hex');
+
     // If the username is not taken, create the new user
-    const user = await User.create({ username, password, listings: [], purchases: [] });
+    const user = await User.create({ 
+      username: username, 
+      hash: result,
+      salt: newSalt,
+      friends: []
+    });
+
     console.log('NEW USER SUCCESS');
     console.log();
     res.status(201).json(user);

@@ -56,8 +56,6 @@ export class Board extends Component{
     }, 1000)
 
     this.currentlyCopied = -1;
-    console.log(this.gridData);
-
   }
   /**
    * Called when the game is lost, or during intialization
