@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const app = express();
 const hostname = 'localhost';
 const port = process.env.port || 3000;
-const mongoUrl = 'mongodb://localhost/myappdb';
+const mongoUrl = 'mongodb://127.0.0.1:27017/Speed-Sudoku';
 
 app.listen(port, hostname, () => console.log(`Server running on http://${hostname}:${port}`));
-app.use(express.static("build"));
 
 //mongodb setup
 try {
@@ -19,6 +19,7 @@ try {
   console.error(err.message);
   process.exit(1);
 }
+
 const dbConnection = mongoose.connection;
 dbConnection.once("open", (_) => {
   console.log(`Database connected: ${mongoUrl}`);
@@ -39,7 +40,24 @@ var User = mongoose.model('User', userSchema);
 
 // change to fit how to hold the puzzle
 var puzzleSchema = new Schema({
-  puzzle: [{ type: Schema.Types.ObjectId }],
+  puzzle:   [{id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []}], 
+  solution: [{id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []},
+            {id: Number, data: []}]
 });
 var Puzzle = mongoose.model('Puzzle', puzzleSchema);
 
@@ -82,6 +100,69 @@ function removeSessions() {
 function logSessions() {
   console.log(sessions);
   console.log()
+}
+
+/**
+ * Loads all puzzles in board_storage, then stores it in the corresponding mongoDB schema
+ */
+function loadPuzzles(){
+  const storePath = "./board_storage/";
+  fs.readdir(storePath, (error, files) => {                       // Read the directory
+    files.forEach(file => {                                       // Get the name of each file in the directory
+      fs.readFile(storePath + file, 'utf8', (err, data) => {      // Open each file
+        let splitData = data.split(",")
+        let puzzle = splitData[0].trim().split("\n");
+        let solution = splitData[1].trim().split("\n");
+
+        let currentPuzzleData = [];                               // This stores the initial state of the puzzle
+        let currentPuzzleSolution = [];                           // This stores the solution of the puzzle
+
+        let counter = 0;
+        puzzle.forEach((line) => {                                // For each line in the initial state
+          let puzzleData = {                                      // Keep this format per the processing of board.js
+              id : counter,
+              data: []
+          }
+
+          let chars = [...line.trim()]                            // Split this line into chars, then
+          chars.forEach((char) => {                               // for each char,
+            if (char === "0"){                                    // process it appropriately.
+              puzzleData.data.push(" ");
+            } else{
+              puzzleData.data.push(parseInt(char));
+            }
+          });
+
+          counter++;
+          currentPuzzleData.push(puzzleData);                     // Add it to the initial state Array
+        });
+
+        counter = 0;
+        solution.forEach((line) => {                              // Repeat this process for the solution
+          let puzzleData = {
+              id : counter,
+              data: []
+          }
+
+          let chars = [...line.trim()]
+          chars.forEach((char) => {
+            puzzleData.data.push(parseInt(char));                  // There will be no empty spaces in the solution
+          });
+          
+          counter++;
+
+          currentPuzzleSolution.push(puzzleData);
+        });
+
+        let newPuzzle = new Puzzle({
+          puzzle: currentPuzzleData,
+          solution: currentPuzzleSolution
+        });
+
+        newPuzzle.save();
+      });                                                          // End readfile
+    });                                                            // End forEach file
+  });                                                              // End readdir
 }
 
 setInterval(removeSessions, 1000);
@@ -186,3 +267,5 @@ app.post('/account/create', async (req, res) => {
     res.status(500).json({ error: 'User creation failed' });
   }
 });
+
+loadPuzzles();

@@ -1,4 +1,4 @@
-/* By: Andrew Dennison and [ADD NAME IF MODIFIED]
+/* By: Andrew Dennison
  * Last modified: 04 DEC 23
 */
 
@@ -56,6 +56,8 @@ export class Board extends Component{
     }, 1000)
 
     this.currentlyCopied = -1;
+    console.log(this.gridData);
+
   }
   /**
    * Called when the game is lost, or during intialization

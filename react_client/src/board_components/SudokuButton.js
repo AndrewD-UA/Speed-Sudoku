@@ -5,6 +5,7 @@ export class SudokuButton extends Component{
     constructor(props){
         super();
 
+        // Check during initialization to see if this square is default (provided by the website)
         this.isDefault = false;
         if (props.value !== " "){
             this.isDefault = true;
@@ -14,16 +15,18 @@ export class SudokuButton extends Component{
             inError : false,
         }
 
-        this.id = props.id;              
-        this.handleClick = this.handleClick.bind(this);
-        this.parentBoard = props.board;
-        this.boardLocation = props.id;
+        this.boardLocation = props.id;      // Used to identify which square this is within the subBoard
+        this.parentBoard = props.board;     // Contains reference to parent subBoard    
 
-        this.pencilHTML = ""; // Contains all divs to be rendered inside pencilButtonOverlay
-        this.pencilsLength = 0; // How many pencil marks the SudokuButton is aware it has
+        this.pencilHTML = "";               // Contains all divs to be rendered inside pencilButtonOverlay
+        this.pencilsLength = 0;             // How many pencil marks the SudokuButton is aware it has
 
+        this.handleClick = this.handleClick.bind(this); // Bind click handler
     }
 
+    /**
+     * Set the sudoku button to be error, and in 3 seconds set it back to being unerrored.
+     */
     setErrored(){
         this.setState({
             inError: true,
@@ -44,7 +47,7 @@ export class SudokuButton extends Component{
             return;
         }
 
-        if (this.parentBoard.updateBoard(this.id) === false){
+        if (this.parentBoard.updateBoard(this.boardLocation) === false){
             this.setErrored();
         } else if (this.state.inError){
             this.setState({

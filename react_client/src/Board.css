@@ -69,6 +69,9 @@
   font-size: 2em;
 }
 
+/* Styling for Sudoku buttons which are marked as errored
+ * This styling will always be temporary and fade after three seconds
+*/
 .errorButton{
   height: 100%;
   width: 100%;
@@ -76,7 +79,10 @@
   background-color: red;
 }
 
-
+/* Styling for the overlay on top of each sudoku button
+ * This formats the pencil marks when they have been applied
+ * This is a parent container of at most, 9 divs
+*/
 .pencilButtonOverlay{
   height: 100%;
   width: 100%;
@@ -93,6 +99,9 @@
   color: black;
 }
 
+/* Parent container for both a Sudoku button and overlay
+ * Relative positioning to allow absolute positioning of pencilButtonOverlay
+*/
 .buttonSpace{
   width: 100%;
   height: 100%;
@@ -229,18 +238,27 @@
   border-radius: 10px;
 }
 
+/* Styling for the div which contains the loss mechanisms
+ * Also applies to winBox
+*/
 .loseBox{
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
+/* Styling for the div in loseBox containing the buttons
+ * Also applies to winBox
+*/
 .lossOptions{
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
 }
 
+/* Styling for the buttons within lossOptions
+ * Also applies to winBox
+*/
 .lossButton{
   height: 8vh;
   font-size: 2em;

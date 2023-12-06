@@ -68,7 +68,7 @@ export const Login = () => {
   };
 
   /**
-   * Adds functionality to, given event, trigger action if it enter.
+   * Filters a given event to conduct an action
    * Primarily used to create account/login with enter key.
    * @param {KeyboardEvent} event KeyEvent logged
    * @param {Callback} action     Action to perform if it is enter
