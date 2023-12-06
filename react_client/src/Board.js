@@ -333,10 +333,20 @@ function UndoButton(props){
 export function AppHeader(){
   return (
     <header className="App-header">
-      <div id="Title">Speed Sudoku</div>
-      <h2 className="subTitle">A competitive Sudoku website!</h2>    
+      <div>
+        <div id="Title">Speed Sudoku</div>
+        <h2 className="subTitle">A competitive Sudoku website!</h2>
+      </div>
+      <input  type="button"
+                value="Help!"
+                onClick = { navigateToHelp }
+                className = "help"/>     
     </header>
   )
+}
+
+function navigateToHelp(){
+
 }
 
 function ErrorTimer(props){

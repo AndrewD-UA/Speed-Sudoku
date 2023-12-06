@@ -152,6 +152,7 @@ export const Login = () => {
           </button>
         </div>
       </div>
+      <h2> New to the site and need directions?  Click on the help button in the top right!</h2>
     </div>
   );
 };

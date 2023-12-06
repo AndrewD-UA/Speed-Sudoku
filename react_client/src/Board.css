@@ -22,6 +22,20 @@
   font-size: calc(10px + 2vmin);
   height: 10vh;
   color: white;
+  position: relative;
+}
+
+.help{
+  position: absolute;
+  top: 10%;
+  right: 5%;
+
+  height: 8vh;
+  width: 15vh;
+  font-size: 2em;
+  
+  border: 0.1em outset black;
+  border-radius: 7px;
 }
 
 /* This is the styling for the main Sudoku header across the top of the App
