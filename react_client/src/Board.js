@@ -2,11 +2,12 @@
  * Last modified: 04 DEC 23
 */
 
-import './Board.css';
+import './css/Board.css';
 import { InputButton } from './board_components/InputButton.js'
 import { EraseButton } from './board_components/EraseButton.js'
 import { PencilButton } from './board_components/PencilButton.js'
 import { SubBoard } from './board_components/SubBoard.js'
+import { AppHeader } from './AppHeader.js'
 import React, { Component, useState } from 'react';
 
 export class Board extends Component{
@@ -322,29 +323,6 @@ function UndoButton(props){
                 onMouseDown = {handleMouseDown} 
                 onMouseUp = {handleMouseUp}
                 onMouseOut = {handleMouseOut}/>
-}
-
-/**
- * Header containing the speed sudoku header at the top of the application, used on every page.
- * @returns   Typescript formatting of the Header
- */
-export function AppHeader(){
-  return (
-    <header className="App-header">
-      <div>
-        <div id="Title">Speed Sudoku</div>
-        <h2 className="subTitle">A competitive Sudoku website!</h2>
-      </div>
-      <input  type="button"
-                value="Help!"
-                onClick = { navigateToHelp }
-                className = "help"/>     
-    </header>
-  )
-}
-
-function navigateToHelp(){
-
 }
 
 function ErrorTimer(props){

@@ -1,0 +1,112 @@
+/* This is the default CSS generated when you make a new React app.
+ * This class contains the entire Sudoku gameplay webpage.  
+ * This class being a flexbox allows for the vertical alignment of the entire page.
+*/
+.App-header {
+    margin: 0;
+    font-size: calc(10px + 2vmin);
+    height: 10vh;
+    color: white;
+    position: relative;
+    text-align: center;
+}
+
+/* Styling for the help! button in the top right of every page
+*/
+.help{
+position: absolute;
+top: 10%;
+right: 5%;
+
+height: 8vh;
+width: 15vh;
+font-size: 2em;
+
+border: 0.1em outset black;
+border-radius: 7px;
+}
+
+/* Styling for the increment buttons on the help page, to go to the next instruction set
+*/
+.helpIncrementButton{
+    height: 4vh;
+    width: 4vh;
+    font-size: 100%;
+}
+
+/* This is the styling for the main Sudoku header across the top of the App
+*/
+.Title{
+font-size: 200%;
+margin-bottom: 0%;
+}
+/* This is the styling for the text underneath the main Sudoku header at the top of the App
+*/
+.subTitle{
+font-size: 50%;
+margin-top: 0%;
+}
+
+/* Styling for the entire page
+*/
+body {
+    background-color: #282c34;
+}
+
+/* Styling for the image on the front login page
+*/
+.imgContainer{
+    width: 100%;
+    background-color: black;
+}
+
+/* Styling for the parent container with login/create account features
+*/
+.landingOptions{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+/* Styling for headers
+*/
+h1{
+    font-size: 400%;
+}
+
+/* Styling for the labels for each of the text input boxes
+*/
+label{
+    font-size: 200%;
+}
+
+/* Styling for the actual text input boxes
+*/
+.loginInput{
+    font-size: 200%;
+    margin-left: 5%;
+}
+
+/* Styling for the login/create account buttons
+*/
+button {
+    font-size: 200%;
+}
+
+/* Styling for the login input fields
+*/
+.inputField {
+    width: 35%;
+}
+
+/* Styling for any page containing the app-body div
+*/
+.App-body{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+
+    margin-top: 10vh;
+    max-height: 60vh;
+}

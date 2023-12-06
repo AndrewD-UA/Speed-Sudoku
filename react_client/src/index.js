@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import './index.css';
+import './css/index.css';
 import { Board } from './Board.js';
 import { Login } from './LogIn.js';
+import { Account } from './Account.js';
+import { Help } from './Help.js';
+
 //import reportWebVitals from './reportWebVitals';
 
 //react-scripts --openssl-legacy-provider start
@@ -38,6 +41,16 @@ const router = createBrowserRouter([
   {
     path: "/play",
     element: <Board data={ practiceSudoku } solution={ practiceSolution }/>,
+  },
+
+  {
+    path: "/account",
+    element: <Account />,
+  },
+
+  {
+    path: "/help",
+    element: <Help />,
   }
 ]);
 

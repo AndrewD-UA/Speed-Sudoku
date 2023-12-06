@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { AppHeader } from './Board.js';
-import './style.css';
-import './Board.css';
+import { AppHeader } from './AppHeader.js';
+import './css/style.css';
+import './css/Board.css';
 
 export const Login = () => {
   const [loginUsername, setLoginUsername] = useState('');
@@ -33,7 +33,7 @@ export const Login = () => {
       .then(response => {
         console.log(response);
         if (response.status === 200) {
-          window.location.href = "/play";
+          window.location.href = "/account";
         } else {
           console.log('Login failed');
         }
@@ -86,7 +86,7 @@ export const Login = () => {
     <div className= "App">
       <AppHeader />
       <div className="imgContainer">
-        <img src={require("./img/banner.gif")} />
+        <img src={require("./img/banner.gif")} alt="Glitchy Sudoku Board"/>
       </div>
       <div className="landingOptions">
         <div className="inputField" id="loginClass">
