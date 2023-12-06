@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './css/index.css';
 import { Board } from './Board.js';
-import { Login } from './LogIn.js';
+import { Login } from './Login.js';
 import { Account } from './Account.js';
 import { Help } from './Help.js';
-
+import { RequireAuth } from './RequireAuth.js'
 //import reportWebVitals from './reportWebVitals';
 
 //react-scripts --openssl-legacy-provider start
@@ -17,6 +17,8 @@ let practiceSudoku = processData(practiceData);
 
 let solutionData = "831492765\n564137982\n729685134\n586943217\n241678395\n973512468\n159628374\n723419856\n846357291"
 let practiceSolution = processData(solutionData);
+
+setTimeout(checkAuth(), 60000);
 
 function processData(inputData){
   let rawData = inputData.split("\n");
@@ -32,7 +34,7 @@ function processData(inputData){
   return gridData;
 }
 
-const router = createBrowserRouter([
+const router = createBrowserRouter([  
   {
     path: "/",
     element: <Login />
@@ -40,19 +42,36 @@ const router = createBrowserRouter([
 
   {
     path: "/play",
-    element: <Board data={ practiceSudoku } solution={ practiceSolution }/>,
+    element: <Board data={ practiceSudoku } solution={ practiceSolution }/>
+                    
   },
 
   {
     path: "/account",
-    element: <Account />,
+    element: <Account />
   },
 
   {
     path: "/help",
-    element: <Help />,
+    element: <Help />
   }
 ]);
+
+function checkAuth(token){
+  /*console.log(token);
+
+  fetch(`http://localhost:3000/authenticate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(token)
+  }).then(response => {
+    return response.text();
+  }).then(text => {
+    console.log(text);
+  })*/
+}
 
 root.render(
   <RouterProvider router = { router } />

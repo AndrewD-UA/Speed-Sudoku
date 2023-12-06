@@ -366,9 +366,11 @@ function Instructions(){
 }
 
 function MainMenu(props){
+  
   return (
     <input  value="Main Menu"
                     type="button"
-                    className="lossButton"/>
+                    className="lossButton"
+                    onClick = {() => { }}/>
   )
 }

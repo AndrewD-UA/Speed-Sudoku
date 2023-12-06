@@ -4,13 +4,51 @@
 
 /* This is the default CSS generated when you make a new React app.
  * height and width being 100vh and 100vw are unnecessary except to 
- * allow percentage-based heights and widths to children.
+ * allow percentage-based heights and widths to sub-children.
 */
 .App {
   text-align: center;
   background-color: #282c34;
   height: 100vh;
   width: 100vw;
+}
+
+/* This is the default CSS generated when you make a new React app.
+ * This class contains the entire Sudoku gameplay webpage.  
+ * This class being a flexbox allows for the vertical alignment of the entire page.
+*/
+.App-header {
+  margin: 0;
+  font-size: calc(10px + 2vmin);
+  height: 10vh;
+  color: white;
+  position: relative;
+}
+
+.help{
+  position: absolute;
+  top: 10%;
+  right: 5%;
+
+  height: 8vh;
+  width: 15vh;
+  font-size: 2em;
+  
+  border: 0.1em outset black;
+  border-radius: 7px;
+}
+
+/* This is the styling for the main Sudoku header across the top of the App
+*/
+#Title{
+  font-size: 200%;
+  margin-bottom: 0%;
+}
+/* This is the styling for the text underneath the main Sudoku header at the top of the App
+*/
+.subTitle{
+  font-size: 50%;
+  margin-top: 0%;
 }
 
 /* This is the styline for everything below the header.

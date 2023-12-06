@@ -3,7 +3,12 @@ import { AppHeader } from './AppHeader.js';
 import './css/style.css';
 import './css/Board.css';
 
-export const Login = () => {
+export function Login(props) {
+  console.log(props);
+  const updateParent = (token) => {
+    props.setAuth(token);
+  }
+
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [createUsername, setCreateUsername] = useState('');
@@ -11,6 +16,7 @@ export const Login = () => {
 
   // Event handler for login button
   const loggingIn = () => {
+  
     // admin login for testing
     if (loginUsername === "admin" && loginPassword === "admin") {
       window.location.href = "/play";
@@ -21,8 +27,6 @@ export const Login = () => {
       password: loginPassword
     };
 
-    console.log(userCredentials);
-
     fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
@@ -31,9 +35,15 @@ export const Login = () => {
       body: JSON.stringify(userCredentials)
     })
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
-          window.location.href = "/account";
+          response.json().then((json) => {
+            //console.log(props.setAuth);
+            //console.log(props);
+            updateParent(json.token);
+            console.log(json.token);
+          }).then(() => {
+            window.location.href = "/account";
+          })
         } else {
           console.log('Login failed');
         }
@@ -155,7 +165,7 @@ export const Login = () => {
           </button>
         </div>
       </div>
-      <h2> New to the site and need directions?  Click on the help button in the top right!</h2>
+      <h2> New to the site and need directions?  Click on the help button in the top left!</h2>
     </div>
   );
 };

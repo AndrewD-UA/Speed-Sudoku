@@ -54,7 +54,7 @@ export class Help extends Component{
         return (
             <div className = "App">
                 <AppHeader />
-                <div className= "App-body">
+                <div className= "App-body-help">
                     <input type="button"
                             value = "<"
                             onClick= { this.decrementCounter }

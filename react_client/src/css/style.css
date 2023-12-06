@@ -16,7 +16,7 @@
 .help{
 position: absolute;
 top: 10%;
-right: 5%;
+left: 5%;
 
 height: 8vh;
 width: 15vh;
@@ -101,7 +101,7 @@ button {
 
 /* Styling for any page containing the app-body div
 */
-.App-body{
+.App-body-help{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;

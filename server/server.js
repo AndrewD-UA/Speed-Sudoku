@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
-const app = express();
 const fs = require('fs');
 const path = require('path');
 const bp = require('body-parser');
+const cookies = require('cookie-parser');
+
+const app = express();
+app.use(cookies());
+
 const cors = require('cors');
 const crypto = require('crypto');
 
@@ -100,7 +104,7 @@ function removeSessions() {
     const sessionTimeout = 5 * (60 * 1000);
 
     if (last + sessionTimeout < now) {
-      delete session[usernames[i]];
+      delete sessions[usernames[i]];
     }
   }
 }
@@ -180,10 +184,10 @@ setInterval(logSessions, 15000);
 function authenticate(req, res, next) {
   let c = req.cookies;
   console.log('auth request:');
-  console.log(req.cookies);
-  if (c != undefined) {
-    if (sessions[c.login.username] != undefined &&
-      sessions[c.login.username].id == c.login.sessionID) {
+  console.log(req.cookies.login);
+  if (c !== undefined) {
+    if (sessions[c.speedsudoku.username] != undefined &&
+      sessions[c.speedsudoku.username].id == c.login.sessionID) {
       next();
     } else {
       res.redirect('/index.html');
@@ -199,6 +203,19 @@ app.get('/app/*', (req, res, next) => {
   next();
 });
 
+app.post('/authenticate', (req, res) => {
+  c = req.body.token;
+  response = "false";
+  if (c != undefined){
+    console.log(c);
+    if (sessions[c.login.username] != undefined &&
+      sessions[c.login.username].id == c.login.sessionID) {
+        response = "true";
+      }
+  }
+
+  res.end(response);
+})
 // Get users
 app.get('/get/users', (req, res) => {
   User.find()
@@ -230,10 +247,13 @@ app.post('/login', function (req, res) {
 
         console.log("Successful authentication");
         let sid = addSession(username);
-        res.cookie("login",
-          { username: username, sessionID: sid },
-          { maxAge: 60000000000 * 2 });
-        res.json({ success: true });
+        res.json({
+          token: {
+            app: "speed-sudoku",
+            username: username,
+            sid: sid
+          }
+        });
       } else {
         console.log("no user found");
         res.json({ success: false });
