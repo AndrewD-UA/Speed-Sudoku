@@ -1,13 +1,19 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const app = express();
 const fs = require('fs');
 const path = require('path');
-const app = express();
-const hostname = 'localhost';
-const port = process.env.port || 3000;
+const bp = require('body-parser');
+const hostname = '127.0.0.1';
+const port = 3000;
 const mongoUrl = 'mongodb://127.0.0.1:27017/Speed-Sudoku';
+const cors = require('cors');
 
 app.listen(port, hostname, () => console.log(`Server running on http://${hostname}:${port}`));
+app.use(cors({
+    exposedHeaders: ['Origin, X-Requested-With, Content-Type, Accept']
+}));
+app.use(bp.json());
 
 //mongodb setup
 try {
@@ -184,7 +190,7 @@ function authenticate(req, res, next) {
   }
 }
 
-app.use('/app/*', authenticate);
+//app.use('/app/*', authenticate);
 app.get('/app/*', (req, res, next) => {
   console.log('another');
   next();
@@ -195,20 +201,6 @@ app.get('/get/users', (req, res) => {
   User.find()
     .then(users => {
       res.json(users);
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      res.status(500).json({ error: 'Failed' });
-    });
-});
-
-// Add user Post
-app.post('/add/user', (req, res) => {
-  var { username, password } = req.body;
-  var newUser = new User({ username, password });
-  newUser.save()
-    .then(userSaved => {
-      res.json(userSaved);
     })
     .catch(err => {
       console.error('Error:', err);
@@ -249,7 +241,7 @@ app.post('/account/create', async (req, res) => {
   try {
     // Check if the username is already taken
     const existingUser = await User.findOne({ username }).exec();
-
+    console.log(existingUser);
     if (existingUser) {
       return res.status(409).json({ error: 'Username is already taken' });
     }

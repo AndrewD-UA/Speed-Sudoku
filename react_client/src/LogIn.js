@@ -21,7 +21,7 @@ export const Login = () => {
       password: loginPassword
     };
 
-    fetch('localhost:80/login', {
+    fetch('localhost:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'applications/json'
@@ -47,7 +47,7 @@ export const Login = () => {
       password: createPassword
     };
 
-    fetch('/account/create', {
+    fetch('http://localhost:3000/account/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ export const Login = () => {
           console.log('Account created successfully');
           // Additional handling if needed after account creation
         } else {
-          console.log('Account creation failed');
+          console.log(response.statusText);
         }
       })
       .catch(error => {
@@ -77,7 +77,6 @@ export const Login = () => {
     if (event.code === "Enter"){
       action();
     }
-    console.log(event);
   }
 
   return (

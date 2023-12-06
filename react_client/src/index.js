@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './index.css';
 import { Board } from './Board.js';
 import { Login } from './LogIn.js';
-//import file from './board_storage/SampleBoard.txt';
 //import reportWebVitals from './reportWebVitals';
 
 //react-scripts --openssl-legacy-provider start
