@@ -263,6 +263,20 @@ app.get('/get/wins/:id', (req, res) => {
     res.json(wins);
   })
 })
+
+app.get('/get/board/:id', (req, res) => {
+  console.log("looking for boards");
+  let getBoard = Puzzle.findOne({_id: req.params.id}).exec();
+
+  getBoard.then((board) => {
+    let result = {
+      puzzle: board.puzzle,
+      solution: board.solution
+    }
+
+    res.json(result);
+  })
+})
 // Login to account
 app.post('/login', function (req, res) {
   const { username, password } = req.body;

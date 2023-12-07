@@ -9,31 +9,27 @@ import { PencilButton } from './board_components/PencilButton.js'
 import { SubBoard } from './board_components/SubBoard.js'
 import { AppHeader } from './AppHeader.js'
 import React, { Component, useState } from 'react';
+import { useParams } from "react-router-dom";
 
-export class Board extends Component{
+export function BoardParams(){
+  return <Board params= {useParams()}/>
+}
 
+class Board extends Component{
   constructor(props){
     super(props);
-
-    if (window.localStorage.getItem("token") === null){
-        window.location.href = "/";
-    }
-
-    this.gridData = props.data;
-    this.solution = props.solution;
-
-    this.moves = [];
+    const { id } = props.params;
 
     this.initialState = {
-      0 :   this.gridData[0].data,
-      1 :   this.gridData[1].data,
-      2 :   this.gridData[2].data,
-      3 :   this.gridData[3].data,
-      4 :   this.gridData[4].data,
-      5 :   this.gridData[5].data,
-      6 :   this.gridData[6].data,
-      7 :   this.gridData[7].data,
-      8 :   this.gridData[8].data,
+      0 :   [],
+      1 :   [],
+      2 :   [],
+      3 :   [],
+      4 :   [],
+      5 :   [],
+      6 :   [],
+      7 :   [],
+      8 :   [],
       pencil0: [[], [], [], [], [], [], [], [], []],
       pencil1: [[], [], [], [], [], [], [], [], []],
       pencil2: [[], [], [], [], [], [], [], [], []],
@@ -54,29 +50,60 @@ export class Board extends Component{
 
     this.state = JSON.parse(JSON.stringify((this.initialState)));
 
-    setInterval(() =>{
-      if (this.state.errors < 3 && !this.state.win){
-        this.setState({
-          timer: this.state.timer + 1
-        })
-      }
-    }, 1000)
-
-    fetch(`http://localhost:3000/get/wins/${props.id}`, {
+    fetch(`http://localhost:3000/get/board/${id}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
-      },
-    }).then((results) => {
-      return results.json();
-    }).then((resultJson) => {
-      this.setState({
-        loaded: true,
-        bestTimes: resultJson
-      });
-    })
+      }}).then((results) => {
+        return results.json();
+      }).then((result) => {
+        if (window.localStorage.getItem("token") === null){
+            window.location.href = "/";
+        }
 
-    this.currentlyCopied = -1;
+        this.gridData = result.puzzle;
+        this.solution = result.solution;
+
+        this.setState({
+          0 :   this.gridData[0].data,
+          1 :   this.gridData[1].data,
+          2 :   this.gridData[2].data,
+          3 :   this.gridData[3].data,
+          4 :   this.gridData[4].data,
+          5 :   this.gridData[5].data,
+          6 :   this.gridData[6].data,
+          7 :   this.gridData[7].data,
+          8 :   this.gridData[8].data,
+        })
+
+        this.moves = [];
+
+        fetch(`http://localhost:3000/get/wins/${props.id}`, {
+          method: "GET",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        }).then((results) => {
+          return results.json();
+        }).then((resultJson) => {
+          this.setState({
+            loaded: true,
+            bestTimes: resultJson
+          });
+
+          setInterval(() =>{
+            if (this.state.errors < 3 && !this.state.win){
+              this.setState({
+                timer: this.state.timer + 1
+              })
+            }
+          }, 1000)
+
+        })
+
+        this.currentlyCopied = -1;
+      })
+    //  this.onKeyPress
   }
   /**
    * Called when the game is lost, or during intialization
@@ -299,6 +326,10 @@ export class Board extends Component{
   // This function returns a Board object, built using the gridData 2D array to be used as <Board />
 
   render(){
+    if (!this.state.loaded){
+      return <div>Loading!</div>
+    }
+
     return (
       <div className="App">
         <AppHeader />

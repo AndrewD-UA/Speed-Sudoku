@@ -50,7 +50,7 @@ export class Account extends Component{
                                     <h2>{`A ${board.name} board with a difficulty of ${board.difficulty}` } </h2>
                                     <input  type="button"
                                             value="Play Now!"
-                                            onClick = {() => {window.location.href = '/play'}} 
+                                            onClick = {() => {window.location.href = `/play/${board._id}`}} 
                                             className = "boardButton"/>
                                 </div>
                             )
