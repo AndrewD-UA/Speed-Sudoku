@@ -8,7 +8,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './css/index.css';
 import { BoardParams } from './Board.js';
-import { Login } from './LogIn.js';
+import { Login } from './Login.js';
 import { Account } from './Account.js';
 import { Help } from './Help.js';
 //import reportWebVitals from './reportWebVitals';

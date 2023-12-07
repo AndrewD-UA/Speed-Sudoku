@@ -308,7 +308,7 @@ class Board extends Component{
     if (this.state.win){
       return (
         <div className="loseBox">
-          <h2>You won after { ~~(this.state.timer / 60) } minutes 
+          <h2>You won after { ~~(this.state.timer / 60) } minute(s) 
             and { this.state.timer % 60 } seconds!</h2>
           <MainMenu parent= { this }/>
         </div>
@@ -318,7 +318,7 @@ class Board extends Component{
     else if (this.state.errors >= 3){
       return (
         <div className="loseBox">
-          <h2>You lost after just { ~~(this.state.timer / 60) } minutes 
+          <h2>You lost after just { ~~(this.state.timer / 60) } minute(s) 
           and { this.state.timer % 60 } seconds!</h2>
           <div className="lossOptions">
             <MainMenu parent={ this }/>

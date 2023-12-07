@@ -201,45 +201,11 @@ function loadPuzzles(){
 setInterval(removeSessions, 1000);
 setInterval(logSessions, 15000);
 
-function authenticate(req, res, next) {
-  let c = req.cookies;
-  console.log('auth request:');
-  console.log(req.cookies.login);
-  if (c !== undefined) {
-    if (sessions[c.speedsudoku.username] != undefined &&
-      sessions[c.speedsudoku.username].id == c.login.sessionID) {
-      next();
-    } else {
-      res.redirect('/index.html');
-    }
-  } else {
-    res.redirect('/index.html');
-  }
-}
-
 //app.use('/app/*', authenticate);
 app.get('/app/*', (req, res, next) => {
   console.log('another');
   next();
 });
-
-app.post('/authenticate', (req, res) => {
-  console.log("Authenticate received");
-  c = req.body;
-  response = "false";
-
-  console.log(c);
-  if (c != undefined){
-    console.log(c);
-    if (sessions[c.username] != undefined &&
-      sessions[c.username].id == c.sid) {
-        response = "true";
-        console.log("authenticated");
-      }
-  }
-
-  res.end(response);
-})
 
 // Get all boards for account
 app.get('/get/boards', (req, res) => {
@@ -251,6 +217,7 @@ app.get('/get/boards', (req, res) => {
    })
 });
 
+// Add a new leaderboard record
 app.post('/add/win', (req, res) => {
   let newLb = new Leaderboard({
     username: req.body.user,
@@ -262,6 +229,7 @@ app.post('/add/win', (req, res) => {
   res.end();
 })
 
+// Get all leaderboard records for board with ID
 app.get('/get/wins/:id', (req, res) => {
   let id = decodeURIComponent(req.params.id);
   let getWins = Leaderboard.find({boardId: {$regex: id}}).exec();
@@ -271,6 +239,7 @@ app.get('/get/wins/:id', (req, res) => {
   })
 })
 
+// Retrieve a board with ID
 app.get('/get/board/:id', (req, res) => {
   let getBoard = Puzzle.findOne({_id: req.params.id}).exec();
 
