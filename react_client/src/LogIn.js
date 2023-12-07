@@ -1,3 +1,8 @@
+// Andrew Dennison, Christopher Reid, Scott Cober -  CSC377
+// This Javascript file holds the client side code for creating and logging in users.
+// It also holds the code for the landing page of the website.
+//
+
 import React, { useState } from 'react';
 import { AppHeader } from './AppHeader.js';
 import './css/style.css';

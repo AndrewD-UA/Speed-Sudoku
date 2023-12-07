@@ -1,3 +1,7 @@
+// Andrew Dennison, Christopher Reid, Scott Cober -  CSC377
+// This Javascript file is the client side code for the account of the current user and its functionalities.
+// 
+
 import React, { Component } from 'react';
 import { AppHeader } from './AppHeader.js';
 import './css/style.css'

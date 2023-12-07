@@ -1,3 +1,7 @@
+// Andrew Dennison, Christopher Reid, Scott Cober -  CSC377
+// This Javascript file creates the Help pahe for game information.
+//
+
 import React, { Component } from 'react';
 import { AppHeader } from './AppHeader.js';
 import './css/style.css';
