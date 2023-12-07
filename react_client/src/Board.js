@@ -84,8 +84,8 @@ class Board extends Component{
         })
 
         this.moves = [];
-
-        fetch(`http://localhost:3000/get/wins/${props.id}`, {
+        let encodeId = encodeURIComponent(this.id)
+        fetch(`http://localhost:3000/get/wins/${encodeId}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json'
@@ -93,6 +93,7 @@ class Board extends Component{
         }).then((results) => {
           return results.json();
         }).then((resultJson) => {
+          console.log(resultJson);
           this.setState({
             loaded: true,
             bestTimes: resultJson
@@ -436,11 +437,28 @@ function ErrorTimer(props){
   );
 }
 
+function organizeBestTimes(bestTimeList){
+  let results = [];
+  for (let i = 1; i < 6; i++){
+    if (i < bestTimeList.length){
+      let time = bestTimeList[i].timestamp
+      results.push(`${i}. ${bestTimeList[i].username} : ${~~(time / 60)} minutes and ${time % 60} seconds`)
+    } else{
+      results.push(`${i}.`)
+    }
+  }
+  return results
+}
+
 function BestTimes(props){
   if (props.parent.state.loaded){
     return <div id="BoardLeft">
               <h2>Best Times</h2>
-              <div>Loaded</div>
+              {
+                organizeBestTimes(props.parent.state.bestTimes).map(result => {
+                  return <div className="bestTime" key= {result}>{result}</div>
+                })
+              }
             </div>
   }
 
@@ -469,11 +487,11 @@ function MainMenu(props){
                             puzzle: props.parent.id
                           })
                         }).then(() => {
-                          //window.location.href = "/account"
+                          window.location.href = "/account"
                         })
                       }
 
-                      //window.location.href = "/account"
+                      window.location.href = "/account"
                      }}/>
   )
 }
