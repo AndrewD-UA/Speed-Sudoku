@@ -102,8 +102,20 @@ class Board extends Component{
         })
 
         this.currentlyCopied = -1;
+        document.addEventListener("keydown", this.handleKeyDown.bind(this))
       })
-    //  this.onKeyPress
+  }
+
+  handleKeyDown(event){
+    if (!isNaN(parseInt(event.key))){
+      let keyPress = parseInt(event.key);
+      if (keyPress > 0){
+        this.storeInputValue(keyPress);
+      }
+    } else if (event.key === "p"){
+      this.togglePencilMode();
+    }
+    
   }
   /**
    * Called when the game is lost, or during intialization

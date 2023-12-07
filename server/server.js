@@ -277,6 +277,7 @@ app.get('/get/board/:id', (req, res) => {
     res.json(result);
   })
 })
+
 // Login to account
 app.post('/login', function (req, res) {
   const { username, password } = req.body;
