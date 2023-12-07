@@ -79,7 +79,7 @@ var leaderboardSchema = new Schema({
   timestamp: String,
   boardId: String
 });
-var Leaderboard = mongoose.model('Leaderboard', puzzleSchema);
+var Leaderboard = mongoose.model('Leaderboard', leaderboardSchema);
 
 
 //session management
@@ -245,17 +245,17 @@ app.get('/get/boards', (req, res) => {
 });
 
 app.post('/add/win', (req, res) => {
-  let newLb = Leaderboard.create({
-    username: req.body.username,
+  let newLb = new Leaderboard({
+    username: req.body.user,
     timestamp: req.body.time,
     boardId: req.body.puzzle
   })
 
   newLb.save();
+  res.end();
 })
 
 app.get('/get/wins/:id', (req, res) => {
-  console.log("looking for IDs");
   let id = decodeURIComponent(req.params.id)
   let getWins = Leaderboard.find({boardId: {$regex: id}}).exec();
 
@@ -265,7 +265,6 @@ app.get('/get/wins/:id', (req, res) => {
 })
 
 app.get('/get/board/:id', (req, res) => {
-  console.log("looking for boards");
   let getBoard = Puzzle.findOne({_id: req.params.id}).exec();
 
   getBoard.then((board) => {

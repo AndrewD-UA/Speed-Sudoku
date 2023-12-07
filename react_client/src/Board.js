@@ -16,9 +16,15 @@ export function BoardParams(){
 }
 
 class Board extends Component{
+
   constructor(props){
     super(props);
+    if (window.localStorage.getItem("token") === "undefined"){
+      window.location.href = "/";
+    }
+
     const { id } = props.params;
+    this.id = id;
 
     this.initialState = {
       0 :   [],
@@ -115,7 +121,11 @@ class Board extends Component{
     } else if (event.key === "p"){
       this.togglePencilMode();
     }
-    
+    else if (event.key === "e"){
+      this.setState({
+        win: true
+      })
+    }
   }
   /**
    * Called when the game is lost, or during intialization
@@ -235,7 +245,9 @@ class Board extends Component{
       let win = true;
       for (let i = 0; i < 9; i++){
         for (let j = 0; j < 9; j++){
-          if (this.solution[i].data[j] !== this.gridData[i].data[j]){
+          console.log(this.solution[i].data[j]);
+          console.log(this.state[i][j]);
+          if (this.solution[i].data[j] !== this.state[i][j]){
             win = false;
             break;
           }
@@ -296,7 +308,7 @@ class Board extends Component{
         <div className="loseBox">
           <h2>You won after { ~~(this.state.timer / 60) } minutes 
             and { this.state.timer % 60 } seconds!</h2>
-          <MainMenu />
+          <MainMenu parent= { this }/>
         </div>
       )
     } 
@@ -435,24 +447,6 @@ function BestTimes(props){
             <h2> Best Times</h2>
             <div>Not loaded</div>
           </div>
-  return (
-    <div id="BoardLeft">
-      <h2>Instructions</h2>
-      <div>
-         Each square, row, and column have exactly one arrangement of the numbers 1-9.  Duplicate numbers are not
-         allowed within the same square, row, or column.
-      </div>
-      <div>
-        Squares which are filled in by default cannot be changed and are marked with a dark blue color.
-      </div>
-      <div>
-        To input a number, select the appropriate input button below the board.  Then, click on the square you'd like to input it in.
-      </div>
-      <div>
-        Incorrect entries will count against you.  Getting 3 errors will reset the board.
-      </div>
-    </div>
-  )
 }
 
 function MainMenu(props){  
@@ -461,24 +455,24 @@ function MainMenu(props){
                     type="button"
                     className="lossButton"
                     onClick = {() => {
+                      let username = JSON.parse(window.localStorage.getItem("token")).username;
                       if (props.parent.state.win){
-                        console.log("sending result");
                         fetch("http://localhost:3000/add/win", {
                           method: "POST",
                           headers: {
                             'Content-Type': 'application/json'
                           },
                           body: JSON.stringify({
-                            user: window.localStorage.getItem("token").username,
+                            user: username,
                             time: props.parent.state.timer,
-                            puzzle: "111"
+                            puzzle: props.parent.id
                           })
                         }).then(() => {
-                          window.location.href = "/account"
+                          //window.location.href = "/account"
                         })
                       }
 
-                      window.location.href = "/account"
+                      //window.location.href = "/account"
                      }}/>
   )
 }

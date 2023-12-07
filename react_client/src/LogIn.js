@@ -34,7 +34,7 @@ export function Login(props) {
       .then(response => {
         if (response.status === 200) {
           response.json().then((json) => {
-            setState(json.token);
+            setState(JSON.stringify(json.token));
             window.location.href = "/account";
           })
         } else {
