@@ -261,7 +261,9 @@ app.post('/add/win', (req, res) => {
 })
 
 app.get('/get/wins/:id', (req, res) => {
-  let id = decodeURIComponent(req.params.id)
+  console.log("searching wins");
+  let id = decodeURIComponent(req.params.id);
+  console.log(id);
   let getWins = Leaderboard.find({boardId: {$regex: id}}).exec();
 
   getWins.then((wins) => {
