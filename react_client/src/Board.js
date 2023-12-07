@@ -15,6 +15,10 @@ export class Board extends Component{
   constructor(props){
     super(props);
 
+    if (window.localStorage.getItem("token") === null){
+        window.location.href = "/";
+    }
+
     this.gridData = props.data;
     this.solution = props.solution;
 

@@ -4,11 +4,9 @@ import './css/style.css';
 import './css/Board.css';
 
 export function Login(props) {
-  console.log(props);
-  const updateParent = (token) => {
-    props.setAuth(token);
+  const setState = (jsonToken) => {
+      window.localStorage.setItem("token", jsonToken);
   }
-
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [createUsername, setCreateUsername] = useState('');
@@ -16,7 +14,6 @@ export function Login(props) {
 
   // Event handler for login button
   const loggingIn = () => {
-  
     // admin login for testing
     if (loginUsername === "admin" && loginPassword === "admin") {
       window.location.href = "/play";
@@ -37,11 +34,7 @@ export function Login(props) {
       .then(response => {
         if (response.status === 200) {
           response.json().then((json) => {
-            //console.log(props.setAuth);
-            //console.log(props);
-            updateParent(json.token);
-            console.log(json.token);
-          }).then(() => {
+            setState(json.token);
             window.location.href = "/account";
           })
         } else {

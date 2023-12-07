@@ -3,10 +3,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const bp = require('body-parser');
-const cookies = require('cookie-parser');
 
 const app = express();
-app.use(cookies());
 
 const cors = require('cors');
 const crypto = require('crypto');
@@ -204,13 +202,17 @@ app.get('/app/*', (req, res, next) => {
 });
 
 app.post('/authenticate', (req, res) => {
-  c = req.body.token;
+  console.log("Authenticate received");
+  c = req.body;
   response = "false";
+
+  console.log(c);
   if (c != undefined){
     console.log(c);
-    if (sessions[c.login.username] != undefined &&
-      sessions[c.login.username].id == c.login.sessionID) {
+    if (sessions[c.username] != undefined &&
+      sessions[c.username].id == c.sid) {
         response = "true";
+        console.log("authenticated");
       }
   }
 
@@ -247,7 +249,9 @@ app.post('/login', function (req, res) {
 
         console.log("Successful authentication");
         let sid = addSession(username);
+        
         res.json({
+          success: true,
           token: {
             app: "speed-sudoku",
             username: username,

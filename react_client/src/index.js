@@ -6,7 +6,6 @@ import { Board } from './Board.js';
 import { Login } from './Login.js';
 import { Account } from './Account.js';
 import { Help } from './Help.js';
-import { RequireAuth } from './RequireAuth.js'
 //import reportWebVitals from './reportWebVitals';
 
 //react-scripts --openssl-legacy-provider start
@@ -42,13 +41,13 @@ const router = createBrowserRouter([
 
   {
     path: "/play",
-    element: <Board data={ practiceSudoku } solution={ practiceSolution }/>
+    element:  <Board data={ practiceSudoku } solution={ practiceSolution }/>
                     
   },
 
   {
     path: "/account",
-    element: <Account />
+    element:  <Account />
   },
 
   {
@@ -74,7 +73,7 @@ function checkAuth(token){
 }
 
 root.render(
-  <RouterProvider router = { router } />
+    <RouterProvider router = { router } />
 );
 
 // If you want to start measuring performance in your app, pass a function
