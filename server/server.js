@@ -68,7 +68,8 @@ var puzzleSchema = new Schema({
             {id: Number, data: []},
             {id: Number, data: []},
             {id: Number, data: []},
-            {id: Number, data: []}]
+            {id: Number, data: []}],
+  difficulty: String
 });
 var Puzzle = mongoose.model('Puzzle', puzzleSchema);
 
@@ -124,6 +125,7 @@ function loadPuzzles(){
         let splitData = data.split(",")
         let puzzle = splitData[0].trim().split("\n");
         let solution = splitData[1].trim().split("\n");
+        let difficulty = splitData[2].trim();
 
         let currentPuzzleData = [];                               // This stores the initial state of the puzzle
         let currentPuzzleSolution = [];                           // This stores the solution of the puzzle
@@ -167,7 +169,8 @@ function loadPuzzles(){
 
         let newPuzzle = new Puzzle({
           puzzle: currentPuzzleData,
-          solution: currentPuzzleSolution
+          solution: currentPuzzleSolution,
+          difficulty: difficulty
         });
 
         newPuzzle.save();

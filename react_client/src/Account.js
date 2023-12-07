@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { AppHeader } from './AppHeader.js';
-import Cookies from 'universal-cookie';
 
 export class Account extends Component{
     constructor(props){
@@ -13,9 +12,19 @@ export class Account extends Component{
         console.log(window.localStorage.getItem("token"));
     }
 
+    getBoards(){
+
+    }
+
     render(){
         return (
-            <AppHeader />
+            <div>
+                <AppHeader />
+                <div className = "App-body">
+
+
+                </div>
+            </div>
         )
     }
 }
