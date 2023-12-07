@@ -51,6 +51,7 @@ var userSchema = new Schema({
   hash: String,
   salt: String,
   friends: [{ type: Schema.Types.ObjectId }],
+  friendRequests: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 var User = mongoose.model('User', userSchema);
 
@@ -82,7 +83,8 @@ var Puzzle = mongoose.model('Puzzle', puzzleSchema);
 var leaderboardSchema = new Schema({
   username: String,
   timestamp: String,
-  boardId: String
+  boardId: String,
+  solvingTime: Number
 });
 var Leaderboard = mongoose.model('Leaderboard', leaderboardSchema);
 
@@ -362,6 +364,93 @@ app.post('/account/create', async (req, res) => {
     console.log('Failed user creation.');
     console.log();
     res.status(500).json({ error: 'User creation failed' });
+  }
+});
+
+// Friend Search
+app.get('/search/users/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const users = await User.find({ username: { $regex: username, $options: 'i' } }).select('username');
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error searching for users' });
+  }
+});
+
+// Send Friend Request
+app.post('/send/friend/request', async (req, res) => {
+  const { senderUsername, receiverUsername } = req.body;
+  try {
+    const sender = await User.findOne({ username: senderUsername });
+    const receiver = await User.findOne({ username: receiverUsername });
+
+    if (!sender || !receiver) {
+      return res.status(404).json({ error: 'Sender or receiver not found' });
+    }
+
+    // Check if the receiver is already a friend
+    if (sender.friends.includes(receiver._id)) {
+      return res.status(400).json({ error: 'User is already your friend' });
+    }
+
+    // Check if a friend request is already sent
+    if (sender.friendRequests.includes(receiver._id)) {
+      return res.status(400).json({ error: 'Friend request already sent' });
+    }
+
+    sender.friendRequests.push(receiver._id);
+    await sender.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error sending friend request' });
+  }
+});
+
+// Accept Friend Request
+app.post('/accept/friend/request', async (req, res) => {
+  const { username, friendUsername } = req.body;
+  try {
+    const user = await User.findOne({ username });
+    const friend = await User.findOne({ username: friendUsername });
+
+    if (!user || !friend) {
+      return res.status(404).json({ error: 'User or friend not found' });
+    }
+
+    // Remove friend request from user's list
+    user.friendRequests.pull(friend._id);
+    // Add friend to user's friend list
+    user.friends.push(friend._id);
+
+    await user.save();
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error accepting friend request' });
+  }
+});
+
+// Retrieve Solving Times for Friends
+app.get('/get/friend/solvingTimes/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const user = await User.findOne({ username }).populate('friends');
+    const friendIds = user.friends.map(friend => friend._id);
+
+    const solvingTimes = await Leaderboard.find({ username: { $in: friendIds } })
+      .select('username solvingTime')
+      .sort('solvingTime')
+      .exec();
+
+    res.json(solvingTimes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error retrieving solving times for friends' });
   }
 });
 
