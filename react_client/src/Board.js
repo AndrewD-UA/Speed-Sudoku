@@ -1,6 +1,7 @@
-/* By: Andrew Dennison
- * Last modified: 04 DEC 23
-*/
+// Andrew Dennison, Christopher Reid, Scott Cober -  CSC377
+// This Javascript file is the client side code for creating the sudoku board with all its different
+// functionalities.
+// 
 
 import './css/Board.css';
 import { InputButton } from './board_components/InputButton.js'

@@ -1,3 +1,7 @@
+// Andrew Dennison, Christopher Reid, Scott Cober -  CSC377
+// This Javascript file is the client side code for the header of the app.
+//
+
 import React, { Component } from 'react';
 import './css/style.css';
 

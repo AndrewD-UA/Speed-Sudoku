@@ -1,3 +1,8 @@
+// Andrew Dennison, Christopher Reid, Scott Cober -  CSC377
+// This Javascript file holds the server side code while authenticating and users and their data.
+// It also holds the code for loading the puzzles from the board_storage folder into the mongoDB.
+//
+
 const mongoose = require('mongoose');
 const express = require('express');
 const fs = require('fs');

@@ -1,3 +1,8 @@
+// Andrew Dennison, Christopher Reid, Scott Cober -  CSC377
+// This Javascript file is the main file for the client side code.
+// It connects to the server and renders the board and login pages.
+//
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
