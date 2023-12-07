@@ -12,6 +12,7 @@ export function Login() {
   const setState = (jsonToken) => {
       window.localStorage.setItem("token", jsonToken);
   }
+
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [createUsername, setCreateUsername] = useState('');
@@ -22,10 +23,6 @@ export function Login() {
 
   // Event handler for login button
   const loggingIn = () => {
-    // admin login for testing
-    if (loginUsername === "admin" && loginPassword === "admin") {
-      window.location.href = "/play";
-    }
 
     const userCredentials = {
       username: loginUsername,

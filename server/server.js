@@ -117,12 +117,6 @@ function removeSessions() {
   }
 }
 
-/* Helper funciton to record active login sessions via console. */
-function logSessions() {
-  console.log(sessions);
-  console.log()
-}
-
 /**
  * Loads all puzzles in board_storage, then stores it in the corresponding mongoDB schema
  */
@@ -199,20 +193,12 @@ function loadPuzzles(){
 }
 
 setInterval(removeSessions, 1000);
-setInterval(logSessions, 15000);
-
-//app.use('/app/*', authenticate);
-app.get('/app/*', (req, res, next) => {
-  console.log('another');
-  next();
-});
 
 // Get all boards for account
 app.get('/get/boards', (req, res) => {
    let allPuzzles = Puzzle.find({}).exec();
 
    allPuzzles.then((puzzles) => {
-    console.log(puzzles);
     res.json(puzzles);
    })
 });

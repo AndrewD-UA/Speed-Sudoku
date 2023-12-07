@@ -112,6 +112,8 @@ button {
     max-height: 60vh;
 }
 
+/* Styling for the main account page container
+*/
 .allBoards{
     display: flex;
     flex-direction: column;
@@ -126,6 +128,8 @@ button {
     border: 5px inset black;
 }
 
+/* Styling for each individual board container
+*/
 .boardPreview{
     display: flex;
     flex-direction: column;
@@ -138,12 +142,16 @@ button {
     border-radius: 10px;
 }
 
+/* Styling for the buttons within each board container
+*/
 .boardButton{
     width: 25%;
     margin-bottom: 5%;
     font-size: 200%;
 }
 
+/* Styling for the pictures on the help page
+*/
 .helpPicture{
     width: 80%;
     height: 80%;
@@ -152,6 +160,8 @@ button {
     margin-bottom: 5%;
 }
 
+/* Styling for the instructions on the help page
+*/
 .helpText{
     width: 50%;
     text-align: center;
@@ -160,6 +170,8 @@ button {
     margin-bottom: 3%;
 }
 
+/* Styling for the container with images and instructions on the help page
+*/
 .helpHolder{
     width: 50%;
     display: flex;
@@ -168,11 +180,15 @@ button {
     align-items: center;
 }
 
+/* Styling for the error messages when logging in
+*/
 .error{
     font-size: 200%;
     color: red;
 }
 
+/* Styling for the main menu button at the bototm of the help page
+*/
 .helpMainMenu{
     width: 15vw;
     height: 5vh;

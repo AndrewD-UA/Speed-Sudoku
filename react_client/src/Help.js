@@ -7,19 +7,24 @@ import { AppHeader } from './AppHeader.js';
 import './css/style.css';
 
 export class Help extends Component{
-    constructor(props){
+    constructor(){
         super();
 
         this.state = {
             counter : 0
         }
 
+        // Tells the counter when it cannot increment anymore
         this.maxIncrement = 9;
 
         this.incrementCounter = this.incrementCounter.bind(this);
         this.decrementCounter = this.decrementCounter.bind(this);
     }
 
+    /**
+     * Move forwards one help page
+     * @returns Null
+     */
     incrementCounter(){
         if (this.state.counter === this.maxIncrement){
             return;
@@ -30,6 +35,10 @@ export class Help extends Component{
         })        
     }
 
+    /**
+     * Move backwards one help page
+     * @returns Null
+     */
     decrementCounter(){
         if (this.state.counter === 0){
             return;
@@ -40,6 +49,10 @@ export class Help extends Component{
         })
     }
 
+    /**
+     * Renders the appropriate image and help instructions based on the state of the screen
+     * @returns <div> containing an image and multiple explanatory divs
+     */
     getInstructionState(){
         if (this.state.counter === 0){
             return (

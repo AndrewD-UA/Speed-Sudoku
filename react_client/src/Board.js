@@ -93,7 +93,6 @@ class Board extends Component{
         }).then((results) => {
           return results.json();
         }).then((resultJson) => {
-          console.log(resultJson);
           this.setState({
             loaded: true,
             bestTimes: resultJson
@@ -124,8 +123,16 @@ class Board extends Component{
       this.togglePencilMode();
     }
     else if (event.key === "e"){
+      console.log(this.solution);
       this.setState({
-        win: true
+        0: this.solution[0].data,
+        1: this.solution[1].data,
+        2: this.solution[2].data,
+        3: this.solution[3].data,
+        4: this.solution[4].data,
+        5: this.solution[5].data,
+        6: this.solution[6].data,
+        7: this.solution[7].data
       })
     }
   }
@@ -222,12 +229,31 @@ class Board extends Component{
     }
 
     // Modify our copy of the values, then set the state with it
-    localCopy[buttonId] = newValue.toString();    
+    localCopy[buttonId] = newValue;    
 
     this.setState({
       [ subBoardId ] : localCopy,
       [`pencil${subBoardId}`] : [[], [], [], [], [], [], [], [], []]
     });
+
+    // Check for win conditions once the state has updated
+    setTimeout(() => {
+      let win = true;
+        for (let i = 0; i < 9; i++){
+          for (let j = 0; j < 9; j++){
+            if (this.solution[i].data[j] !== this.state[i][j]){
+              win = false;
+              break;
+            }
+          }
+        }
+        if (win) {
+          this.setState({
+            win: true,
+        })
+        this.storeInputValue(this.state.currentlyCopied);
+        }
+    }, 100)
   }
 
   /**
@@ -244,24 +270,6 @@ class Board extends Component{
     }
 
     if (this.solution[subBoardId].data[buttonId] === newValue){
-      let win = true;
-      for (let i = 0; i < 9; i++){
-        for (let j = 0; j < 9; j++){
-          console.log(this.solution[i].data[j]);
-          console.log(this.state[i][j]);
-          if (this.solution[i].data[j] !== this.state[i][j]){
-            win = false;
-            break;
-          }
-        }
-      }
-
-      if (win) {
-        this.setState({
-          win: true
-        })
-      }
-
       return true;
     }
 
@@ -439,10 +447,10 @@ function ErrorTimer(props){
 
 function organizeBestTimes(bestTimeList){
   let results = [];
-  for (let i = 1; i < 6; i++){
+  for (let i = 0; i < 5; i++){
     if (i < bestTimeList.length){
       let time = bestTimeList[i].timestamp
-      results.push(`${i}. ${bestTimeList[i].username} : ${~~(time / 60)} minutes and ${time % 60} seconds`)
+      results.push(`${i + 19}. ${bestTimeList[i].username} : ${~~(time / 60)} minutes and ${time % 60} seconds`)
     } else{
       results.push(`${i}.`)
     }
@@ -489,9 +497,9 @@ function MainMenu(props){
                         }).then(() => {
                           window.location.href = "/account"
                         })
+                      } else {
+                        window.location.href = "/account"
                       }
-
-                      window.location.href = "/account"
                      }}/>
   )
 }
