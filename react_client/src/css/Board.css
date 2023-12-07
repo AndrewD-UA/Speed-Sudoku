@@ -38,6 +38,18 @@
   border-radius: 7px;
 }
 
+
+.logout{
+  position: absolute;
+  top: 10%;
+  right: 5%;
+  height: 8vh;
+  width: 15vh;
+  font-size: 1.4em;
+  border: 0.1em outset black;
+  border-radius: 7px;
+}
+
 /* This is the styling for the main Sudoku header across the top of the App
 */
 #Title{

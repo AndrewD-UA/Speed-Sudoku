@@ -129,7 +129,7 @@ function loadPuzzles(){
   fs.readdir(storePath, (error, files) => {                       // Read the directory
     Puzzle.find({}).exec().then((puzzles) => {
       if (files.length === puzzles.length){
-        console.log("we already loaded all files");
+        console.log("We already loaded all files!");
         return;
       }
 
@@ -261,9 +261,7 @@ app.post('/add/win', (req, res) => {
 })
 
 app.get('/get/wins/:id', (req, res) => {
-  console.log("searching wins");
   let id = decodeURIComponent(req.params.id);
-  console.log(id);
   let getWins = Leaderboard.find({boardId: {$regex: id}}).exec();
 
   getWins.then((wins) => {
@@ -334,7 +332,6 @@ app.post('/account/create', async (req, res) => {
   try {
     // Check if the username is already taken
     const existingUser = await User.findOne({ username }).exec();
-    console.log(existingUser);
     if (existingUser) {
       return res.status(409).json({ error: 'Username is already taken' });
     }

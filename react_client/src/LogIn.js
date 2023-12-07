@@ -8,7 +8,7 @@ import { AppHeader } from './AppHeader.js';
 import './css/style.css';
 import './css/Board.css';
 
-export function Login(props) {
+export function Login() {
   const setState = (jsonToken) => {
       window.localStorage.setItem("token", jsonToken);
   }
@@ -16,6 +16,9 @@ export function Login(props) {
   const [loginPassword, setLoginPassword] = useState('');
   const [createUsername, setCreateUsername] = useState('');
   const [createPassword, setCreatePassword] = useState('');
+
+  const [errSignIn, setErrSignIn] = useState(false);
+  const [errCreate, setErrCreate] = useState(false);
 
   // Event handler for login button
   const loggingIn = () => {
@@ -44,10 +47,12 @@ export function Login(props) {
           })
         } else {
           console.log('Login failed');
+          setErrSignIn(true);
         }
       })
       .catch(error => {
         console.error('Error loggin in:', error);
+        setErrSignIn(true);
       });
   };
 
@@ -68,13 +73,15 @@ export function Login(props) {
       .then(response => {
         if (response.ok) {
           console.log('Account created successfully');
-          // Additional handling if needed after account creation
+          setErrCreate(false);
         } else {
           console.log(response.statusText);
+          setErrCreate(true);
         }
       })
       .catch(error => {
         console.error('Error creating account:', error);
+        setErrCreate(true);
       });
   };
 
@@ -92,7 +99,7 @@ export function Login(props) {
 
   return (
     <div className= "App">
-      <AppHeader />
+      <AppHeader logout={false}/>
       <div className="imgContainer">
         <img src={require("./img/banner.gif")} alt="Glitchy Sudoku Board"/>
       </div>
@@ -126,6 +133,9 @@ export function Login(props) {
           <button type="button" id="login" onClick={loggingIn} value="Log In">
             Login
           </button>
+          {
+            errSignIn ? <div className="error">Error signing in</div> : <div></div>
+          }
         </div>
         <div className="inputField" id="create">
           <h1>Create Account</h1>
@@ -161,6 +171,9 @@ export function Login(props) {
           >
             Create
           </button>
+          {
+            errCreate ? <div className="error">Username already taken!</div> : <div></div>
+          }
         </div>
       </div>
       <h2> New to the site and need directions?  Click on the help button in the top left!</h2>

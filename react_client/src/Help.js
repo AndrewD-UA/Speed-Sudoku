@@ -43,7 +43,16 @@ export class Help extends Component{
     getInstructionState(){
         if (this.state.counter === 0){
             return (
-                <div>We're here to help!</div>
+                <div className="helpHolder">
+                    <img src={require("./img/help/1.jpg")} alt="A screenshot of the sudoku website"
+                    width="50%" height="50%" className="helpPicture"/>
+                    <div className="helpText">We're here to help!  On this help page, use the arrows on
+                    either side to navigate.  You can't scroll past the images, so don't worry!</div>
+                    <div className="helpText">This is your login page.  As you can see, there are two functions,
+                    logging in and creating an account.  To create an account, type in your desired username and password.
+                    You'll be alerted if the username is already taken, so be creative!</div>
+                    <div className="helpText">Once you've made your account, log into the account on the left and get started!</div>
+                </div>
             )
         }
 
