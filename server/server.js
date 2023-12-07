@@ -69,15 +69,17 @@ var puzzleSchema = new Schema({
             {id: Number, data: []},
             {id: Number, data: []},
             {id: Number, data: []}],
-  difficulty: String
+  difficulty: String,
+  name: String
 });
 var Puzzle = mongoose.model('Puzzle', puzzleSchema);
 
-var competitiveSchema = new Schema({
-  wins: Number,
+var leaderboardSchema = new Schema({
+  username: String,
   timestamp: String,
+  boardId: String
 });
-var Competitive = mongoose.model('Competitive', puzzleSchema);
+var Leaderboard = mongoose.model('Leaderboard', puzzleSchema);
 
 
 //session management
@@ -120,62 +122,72 @@ function logSessions() {
 function loadPuzzles(){
   const storePath = "./board_storage/";
   fs.readdir(storePath, (error, files) => {                       // Read the directory
-    files.forEach(file => {                                       // Get the name of each file in the directory
-      fs.readFile(storePath + file, 'utf8', (err, data) => {      // Open each file
-        let splitData = data.split(",")
-        let puzzle = splitData[0].trim().split("\n");
-        let solution = splitData[1].trim().split("\n");
-        let difficulty = splitData[2].trim();
+    Puzzle.find({}).exec().then((puzzles) => {
+      if (files.length === puzzles.length){
+        console.log("we already loaded all files");
+        return;
+      }
 
-        let currentPuzzleData = [];                               // This stores the initial state of the puzzle
-        let currentPuzzleSolution = [];                           // This stores the solution of the puzzle
-
-        let counter = 0;
-        puzzle.forEach((line) => {                                // For each line in the initial state
-          let puzzleData = {                                      // Keep this format per the processing of board.js
-              id : counter,
-              data: []
-          }
-
-          let chars = [...line.trim()]                            // Split this line into chars, then
-          chars.forEach((char) => {                               // for each char,
-            if (char === "0"){                                    // process it appropriately.
-              puzzleData.data.push(" ");
-            } else{
-              puzzleData.data.push(parseInt(char));
+      files.forEach(file => {                                       // Get the name of each file in the directory
+        fs.readFile(storePath + file, 'utf8', (err, data) => {      // Open each file
+          let splitData = data.split(",")
+          let puzzle = splitData[0].trim().split("\n");
+          let solution = splitData[1].trim().split("\n");
+          let difficulty = splitData[2].trim();
+          let name = splitData[3].trim();
+  
+          let currentPuzzleData = [];                               // This stores the initial state of the puzzle
+          let currentPuzzleSolution = [];                           // This stores the solution of the puzzle
+  
+          let counter = 0;
+          puzzle.forEach((line) => {                                // For each line in the initial state
+            let puzzleData = {                                      // Keep this format per the processing of board.js
+                id : counter,
+                data: []
             }
+  
+            let chars = [...line.trim()]                            // Split this line into chars, then
+            chars.forEach((char) => {                               // for each char,
+              if (char === "0"){                                    // process it appropriately.
+                puzzleData.data.push(" ");
+              } else{
+                puzzleData.data.push(parseInt(char));
+              }
+            });
+  
+            counter++;
+            currentPuzzleData.push(puzzleData);                     // Add it to the initial state Array
           });
-
-          counter++;
-          currentPuzzleData.push(puzzleData);                     // Add it to the initial state Array
-        });
-
-        counter = 0;
-        solution.forEach((line) => {                              // Repeat this process for the solution
-          let puzzleData = {
-              id : counter,
-              data: []
-          }
-
-          let chars = [...line.trim()]
-          chars.forEach((char) => {
-            puzzleData.data.push(parseInt(char));                  // There will be no empty spaces in the solution
+  
+          counter = 0;
+          solution.forEach((line) => {                              // Repeat this process for the solution
+            let puzzleData = {
+                id : counter,
+                data: []
+            }
+  
+            let chars = [...line.trim()]
+            chars.forEach((char) => {
+              puzzleData.data.push(parseInt(char));                  // There will be no empty spaces in the solution
+            });
+            
+            counter++;
+  
+            currentPuzzleSolution.push(puzzleData);
           });
-          
-          counter++;
-
-          currentPuzzleSolution.push(puzzleData);
-        });
-
-        let newPuzzle = new Puzzle({
-          puzzle: currentPuzzleData,
-          solution: currentPuzzleSolution,
-          difficulty: difficulty
-        });
-
-        newPuzzle.save();
-      });                                                          // End readfile
-    });                                                            // End forEach file
+  
+          let newPuzzle = new Puzzle({
+            puzzle: currentPuzzleData,
+            solution: currentPuzzleSolution,
+            difficulty: difficulty,
+            name: name
+          });
+  
+          newPuzzle.save();
+        });                                                          // End readfile
+      });                                                            // End forEach file
+    })
+    
   });                                                              // End readdir
 }
 
@@ -221,18 +233,36 @@ app.post('/authenticate', (req, res) => {
 
   res.end(response);
 })
-// Get users
-app.get('/get/users', (req, res) => {
-  User.find()
-    .then(users => {
-      res.json(users);
-    })
-    .catch(err => {
-      console.error('Error:', err);
-      res.status(500).json({ error: 'Failed' });
-    });
+
+// Get all boards for account
+app.get('/get/boards', (req, res) => {
+   let allPuzzles = Puzzle.find({}).exec();
+
+   allPuzzles.then((puzzles) => {
+    console.log(puzzles);
+    res.json(puzzles);
+   })
 });
 
+app.post('/add/win', (req, res) => {
+  let newLb = Leaderboard.create({
+    username: req.body.username,
+    timestamp: req.body.time,
+    boardId: req.body.puzzle
+  })
+
+  newLb.save();
+})
+
+app.get('/get/wins/:id', (req, res) => {
+  console.log("looking for IDs");
+  let id = decodeURIComponent(req.params.id)
+  let getWins = Leaderboard.find({boardId: {$regex: id}}).exec();
+
+  getWins.then((wins) => {
+    res.json(wins);
+  })
+})
 // Login to account
 app.post('/login', function (req, res) {
   const { username, password } = req.body;

@@ -47,7 +47,9 @@ export class Board extends Component{
       errors: 0,
       timer: 0,
       pencilMode: false,
-      win: false
+      win: false,
+      loaded: false,
+      bestTimes: []
     }
 
     this.state = JSON.parse(JSON.stringify((this.initialState)));
@@ -59,6 +61,20 @@ export class Board extends Component{
         })
       }
     }, 1000)
+
+    fetch(`http://localhost:3000/get/wins/${props.id}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then((results) => {
+      return results.json();
+    }).then((resultJson) => {
+      this.setState({
+        loaded: true,
+        bestTimes: resultJson
+      });
+    })
 
     this.currentlyCopied = -1;
   }
@@ -177,6 +193,22 @@ export class Board extends Component{
     }
 
     if (this.solution[subBoardId].data[buttonId] === newValue){
+      let win = true;
+      for (let i = 0; i < 9; i++){
+        for (let j = 0; j < 9; j++){
+          if (this.solution[i].data[j] !== this.gridData[i].data[j]){
+            win = false;
+            break;
+          }
+        }
+      }
+
+      if (win) {
+        this.setState({
+          win: true
+        })
+      }
+
       return true;
     }
 
@@ -236,7 +268,7 @@ export class Board extends Component{
           <h2>You lost after just { ~~(this.state.timer / 60) } minutes 
           and { this.state.timer % 60 } seconds!</h2>
           <div className="lossOptions">
-            <MainMenu />
+            <MainMenu parent={ this }/>
             <input  value="Reset Board"
                     type="button"
                     className="lossButton"
@@ -258,7 +290,7 @@ export class Board extends Component{
                                 key = { `SubBoard${subBoard}` }
                                 id = { subBoard }
                                 pencil = { this.state[`pencil${subBoard}`]} />
-              }
+            }
           })
         }
       </div>
@@ -272,7 +304,7 @@ export class Board extends Component{
         <AppHeader />
         <div className="App-body">
           <div className="PrimaryDisplay">
-          <Instructions />
+          <BestTimes parent = {this}/>
           {
             this.renderBoard()
           }
@@ -348,7 +380,18 @@ function ErrorTimer(props){
   );
 }
 
-function Instructions(){
+function BestTimes(props){
+  if (props.parent.state.loaded){
+    return <div id="BoardLeft">
+              <h2>Best Times</h2>
+              <div>Loaded</div>
+            </div>
+  }
+
+  return  <div id="BoardLeft">
+            <h2> Best Times</h2>
+            <div>Not loaded</div>
+          </div>
   return (
     <div id="BoardLeft">
       <h2>Instructions</h2>
@@ -369,12 +412,30 @@ function Instructions(){
   )
 }
 
-function MainMenu(props){
-  
+function MainMenu(props){  
   return (
     <input  value="Main Menu"
                     type="button"
                     className="lossButton"
-                    onClick = {() => { }}/>
+                    onClick = {() => {
+                      if (props.parent.state.win){
+                        console.log("sending result");
+                        fetch("http://localhost:3000/add/win", {
+                          method: "POST",
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            user: window.localStorage.getItem("token").username,
+                            time: props.parent.state.timer,
+                            puzzle: "111"
+                          })
+                        }).then(() => {
+                          window.location.href = "/account"
+                        })
+                      }
+
+                      window.location.href = "/account"
+                     }}/>
   )
 }
