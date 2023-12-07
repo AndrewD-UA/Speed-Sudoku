@@ -29,7 +29,7 @@ export function Login() {
       password: loginPassword
     };
 
-    fetch('http://localhost:3000/login', {
+    fetch('http://206.81.15.22:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ export function Login() {
       password: createPassword
     };
 
-    fetch('http://localhost:3000/account/create', {
+    fetch('http://206.81.15.22:3000/account/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

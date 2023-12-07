@@ -57,7 +57,7 @@ class Board extends Component{
 
     this.state = JSON.parse(JSON.stringify((this.initialState)));
 
-    fetch(`http://localhost:3000/get/board/${id}`, {
+    fetch(`http://206.81.15.22:3000/get/board/${id}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ class Board extends Component{
 
         this.moves = [];
         let encodeId = encodeURIComponent(this.id)
-        fetch(`http://localhost:3000/get/wins/${encodeId}`, {
+        fetch(`http://206.81.15.22:3000/get/wins/${encodeId}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json'
