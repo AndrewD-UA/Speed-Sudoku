@@ -11,9 +11,39 @@ import { SubBoard } from './board_components/SubBoard.js'
 import { AppHeader } from './AppHeader.js'
 import React, { Component, useState } from 'react';
 import { useParams } from "react-router-dom";
+import { ipAddress } from './index.js';
 
 export function BoardParams(){
   return <Board params= {useParams()}/>
+}
+
+// The inital state of the Board component
+const initialState = {
+  0 :   [],
+  1 :   [],
+  2 :   [],
+  3 :   [],
+  4 :   [],
+  5 :   [],
+  6 :   [],
+  7 :   [],
+  8 :   [],
+  pencil0: [[], [], [], [], [], [], [], [], []],
+  pencil1: [[], [], [], [], [], [], [], [], []],
+  pencil2: [[], [], [], [], [], [], [], [], []],
+  pencil3: [[], [], [], [], [], [], [], [], []],
+  pencil4: [[], [], [], [], [], [], [], [], []],
+  pencil5: [[], [], [], [], [], [], [], [], []],
+  pencil6: [[], [], [], [], [], [], [], [], []],
+  pencil7: [[], [], [], [], [], [], [], [], []],
+  pencil8: [[], [], [], [], [], [], [], [], []],
+  currentlyCopied : -1,
+  errors: 0,
+  timer: 0,
+  pencilMode: false,
+  win: false,
+  loaded: false,
+  bestTimes: []
 }
 
 class Board extends Component{
@@ -26,38 +56,13 @@ class Board extends Component{
 
     const { id } = props.params;
     this.id = id;
+    this.state = JSON.parse(JSON.stringify((initialState)));
 
-    this.initialState = {
-      0 :   [],
-      1 :   [],
-      2 :   [],
-      3 :   [],
-      4 :   [],
-      5 :   [],
-      6 :   [],
-      7 :   [],
-      8 :   [],
-      pencil0: [[], [], [], [], [], [], [], [], []],
-      pencil1: [[], [], [], [], [], [], [], [], []],
-      pencil2: [[], [], [], [], [], [], [], [], []],
-      pencil3: [[], [], [], [], [], [], [], [], []],
-      pencil4: [[], [], [], [], [], [], [], [], []],
-      pencil5: [[], [], [], [], [], [], [], [], []],
-      pencil6: [[], [], [], [], [], [], [], [], []],
-      pencil7: [[], [], [], [], [], [], [], [], []],
-      pencil8: [[], [], [], [], [], [], [], [], []],
-      currentlyCopied : -1,
-      errors: 0,
-      timer: 0,
-      pencilMode: false,
-      win: false,
-      loaded: false,
-      bestTimes: []
-    }
+    this.loadBoard();
+  }
 
-    this.state = JSON.parse(JSON.stringify((this.initialState)));
-
-    fetch(`http://206.81.15.22:3000/get/board/${id}`, {
+  loadBoard(){
+    fetch(`${ipAddress}/get/board/${this.id}`, {
       method: "GET",
       headers: {
         'Content-Type': 'application/json'
@@ -85,7 +90,7 @@ class Board extends Component{
 
         this.moves = [];
         let encodeId = encodeURIComponent(this.id)
-        fetch(`http://206.81.15.22:3000/get/wins/${encodeId}`, {
+        fetch(`${ipAddress}/get/wins/${encodeId}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json'
@@ -98,14 +103,13 @@ class Board extends Component{
             bestTimes: resultJson
           });
 
-          setInterval(() =>{
+          this.timerID = setInterval(() =>{
             if (this.state.errors < 3 && !this.state.win){
               this.setState({
                 timer: this.state.timer + 1
               })
             }
-          }, 1000)
-
+          }, 1000);
         })
 
         this.currentlyCopied = -1;
@@ -135,13 +139,19 @@ class Board extends Component{
         7: this.solution[7].data
       })
     }
+
+    else if (event.key === "Escape"){
+      window.location.href = '/account';
+    }
   }
   /**
    * Called when the game is lost, or during intialization
    * Reset the game board to all its defaults
    */
   setDefaultState(){
-    this.setState(this.initialState);
+    clearInterval(this.timerID);
+    this.setState(JSON.parse(JSON.stringify((initialState))));
+    this.loadBoard();
   }
 
   /**
@@ -334,7 +344,6 @@ class Board extends Component{
                     type="button"
                     className="lossButton"
                     onClick={this.setDefaultState.bind(this)}/>
-
           </div>
         </div>
       )
@@ -352,31 +361,17 @@ class Board extends Component{
                                 id = { subBoard }
                                 pencil = { this.state[`pencil${subBoard}`]} />
             }
+
+            return "";
           })
         }
       </div>
     )
   }
-  // This function returns a Board object, built using the gridData 2D array to be used as <Board />
 
-  render(){
-    if (!this.state.loaded){
-      return <div>Loading!</div>
-    }
-
-    return (
-      <div className="App">
-        <AppHeader />
-        <div className="App-body">
-          <div className="PrimaryDisplay">
-          <BestTimes parent = {this}/>
-          {
-            this.renderBoard()
-          }
-          <ErrorTimer errors={ this.state.errors } timer={ this.state.timer }/>
-          </div>          
-
-          <div id="Inputs">
+  // Determine whether to render the input buttons
+  renderInputs(){
+    return(<div id="Inputs">
             {
               // gridData.map pulls each individual gridSquare from gridData.  These are the sub-grids
               // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
@@ -385,13 +380,54 @@ class Board extends Component{
                 return <InputButton input={gridSquare.id + 1} key={`InputButton${gridSquare.id + 1}`} board={this}/>
               })
             }
-          </div>
+            </div>
+    );
+  }
 
-          <div id="Options">
-            <PencilButton board={this}/>
-            <EraseButton board={this}/>
-            <UndoButton board={this}/>
-          </div>
+  // This function returns a Board object, built using the gridData 2D array to be used as <Board />
+  render(){
+    if (!this.state.loaded){
+      return <div>Loading!</div>
+    }
+
+    let inputs;
+    let options;
+
+    if (this.state.errors < 3 && !this.state.win){
+      inputs = 
+        <div id="Inputs">
+        {
+          // gridData.map pulls each individual gridSquare from gridData.  These are the sub-grids
+          // labelled 1-9.  Then, the id of each gridSquare is stored in a new inputButton at the bottom
+          // This just avoids having to generate a new sequence of 1-9.
+          this.gridData.map((gridSquare) => {
+            return <InputButton input={gridSquare.id + 1} key={`InputButton${gridSquare.id + 1}`} board={this}/>
+          })
+        }
+        </div>
+
+      options = 
+        <div id="Options">
+              <PencilButton board={this}/>
+              <EraseButton board={this}/>
+              <UndoButton board={this}/>
+        </div>
+    }
+
+    return (
+      <div className="App">
+        <AppHeader />
+        <div className="App-body">
+          <div className="PrimaryDisplay">
+            <BestTimes parent = {this}/>
+            {
+              this.renderBoard()
+            }
+            <ErrorTimer errors={ this.state.errors } timer={ this.state.timer }/>
+          </div>          
+          
+            { inputs }
+            { options }         
         </div>
       </div>
     );
@@ -450,9 +486,9 @@ function organizeBestTimes(bestTimeList){
   for (let i = 0; i < 5; i++){
     if (i < bestTimeList.length){
       let time = bestTimeList[i].timestamp
-      results.push(`${i + 19}. ${bestTimeList[i].username} : ${~~(time / 60)} minutes and ${time % 60} seconds`)
+      results.push(`${i + 1}. (${bestTimeList[i].username}) ${~~(time / 60)} : ${time % 60}`)
     } else{
-      results.push(`${i}.`)
+      results.push(`${i + 1}.`)
     }
   }
   return results
@@ -484,7 +520,7 @@ function MainMenu(props){
                     onClick = {() => {
                       let username = JSON.parse(window.localStorage.getItem("token")).username;
                       if (props.parent.state.win){
-                        fetch("http://localhost:3000/add/win", {
+                        fetch(`${ipAddress}/add/win`, {
                           method: "POST",
                           headers: {
                             'Content-Type': 'application/json'

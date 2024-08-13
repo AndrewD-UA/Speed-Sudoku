@@ -14,9 +14,9 @@ const app = express();
 const cors = require('cors');
 const crypto = require('crypto');
 
-const hostname = '127.0.0.1';
+const hostname = 'localhost';
 const port = 3000;
-const mongoUrl = 'mongodb://127.0.0.1:27017/Speed-Sudoku';
+const mongoUrl = 'mongodb://localhost:27017/Speed-Sudoku';
 
 app.listen(port, hostname, () => console.log(`Server running on http://${hostname}:${port}`));
 app.use(cors({
@@ -253,13 +253,14 @@ app.post('/login', function (req, res) {
         
         if (result !== user.hash){
           console.log("Incorrect password");
+          res.status(401).json({ success: false });
           return;
         }
 
         console.log("Successful authentication");
         let sid = addSession(username);
         
-        res.json({
+        res.status(401).json({
           success: true,
           token: {
             app: "speed-sudoku",

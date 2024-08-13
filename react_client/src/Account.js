@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react';
 import { AppHeader } from './AppHeader.js';
+import { ipAddress } from './index.js';
 import './css/style.css'
 
 export class Account extends Component{
@@ -23,7 +24,7 @@ export class Account extends Component{
     }
 
     componentDidMount(){
-        fetch("http://localhost:3000/get/boards", {
+        fetch(ipAddress + "/get/boards", {
             method: "GET",
             "Content-Type" : "application/json"
         }).then((boards) => {
@@ -66,10 +67,3 @@ export class Account extends Component{
         )
     }
 }
-/*
-<div className= "getFriends">
-                        <input  type="text"/>
-                        <input  type="button"
-                                value="search" />
-                    </div>
-*/

@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { AppHeader } from './AppHeader.js';
+import { ipAddress } from './index.js';
 import './css/style.css';
 import './css/Board.css';
 
@@ -20,16 +21,18 @@ export function Login() {
 
   const [errSignIn, setErrSignIn] = useState(false);
   const [errCreate, setErrCreate] = useState(false);
+  const [createSuccess, setCreateSuccess] = useState(false);
 
   // Event handler for login button
   const loggingIn = () => {
+    setErrSignIn(false);
 
     const userCredentials = {
       username: loginUsername,
       password: loginPassword
     };
 
-    fetch('http://206.81.15.22:3000/login', {
+    fetch(ipAddress + '/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -37,30 +40,37 @@ export function Login() {
       body: JSON.stringify(userCredentials)
     })
       .then(response => {
+        console.log("response received");
         if (response.status === 200) {
           response.json().then((json) => {
             setState(JSON.stringify(json.token));
             window.location.href = "/account";
-          })
-        } else {
-          console.log('Login failed');
-          setErrSignIn(true);
-        }
+          });
+
+          return;
+        } 
+        
+        console.log('Login failed');
+        setErrSignIn(true);
+        document.getElementById("password").value = "";
+        
       })
       .catch(error => {
-        console.error('Error loggin in:', error);
+        console.error('Error logging in:', error);
         setErrSignIn(true);
       });
   };
 
   // Event handler for creating new user account
   const creatingAccount = () => {
+    setErrCreate(false);
+    setCreateSuccess(false);
     const newUserCredentials = {
       username: createUsername,
       password: createPassword
     };
 
-    fetch('http://206.81.15.22:3000/account/create', {
+    fetch(ipAddress + '/account/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -69,12 +79,13 @@ export function Login() {
     })
       .then(response => {
         if (response.ok) {
-          console.log('Account created successfully');
-          setErrCreate(false);
+          setCreateSuccess(true);
         } else {
           console.log(response.statusText);
           setErrCreate(true);
         }
+        setCreateUsername('');
+        setCreatePassword('');
       })
       .catch(error => {
         console.error('Error creating account:', error);
@@ -123,7 +134,7 @@ export function Login() {
               name="password"
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
-              onKeyDown={(e => checkIfEnter(e, loggingIn))}
+              onKeyDown={(e) => checkIfEnter(e, loggingIn)}
               className="loginInput"
             />
           </div>
@@ -131,7 +142,7 @@ export function Login() {
             Login
           </button>
           {
-            errSignIn ? <div className="error">Error signing in</div> : <div></div>
+            errSignIn ? <div className="error">Services are currently unavailable</div> : <div></div>
           }
         </div>
         <div className="inputField" id="create">
@@ -169,7 +180,10 @@ export function Login() {
             Create
           </button>
           {
-            errCreate ? <div className="error">Username already taken!</div> : <div></div>
+            errCreate ? <div className="error">This account name is taken.</div> : <div></div>
+          }
+          {
+            createSuccess ? <div className="success">Account created!</div> : <div></div>
           }
         </div>
       </div>

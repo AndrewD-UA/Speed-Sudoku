@@ -187,6 +187,11 @@ button {
     color: red;
 }
 
+.success{
+    font-size: 200%;
+    color: lightblue;
+}
+
 /* Styling for the main menu button at the bototm of the help page
 */
 .helpMainMenu{

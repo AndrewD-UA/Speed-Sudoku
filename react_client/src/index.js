@@ -14,6 +14,8 @@ import { Help } from './Help.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+export const ipAddress = "http://localhost:3000";
+
 // Router contains pathing to each page
 const router = createBrowserRouter([  
   {
@@ -23,8 +25,7 @@ const router = createBrowserRouter([
 
   {
     path: "/play/:id",
-    element:  <BoardParams />
-                    
+    element:  <BoardParams />          
   },
 
   {
